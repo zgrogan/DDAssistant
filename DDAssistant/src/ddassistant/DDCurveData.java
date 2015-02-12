@@ -5,13 +5,22 @@ import java.util.LinkedList;
 import org.jfree.data.xy.XYSeries;
 
 public class DDCurveData {
-	
+
 	private LinkedList<DDSurvey> data;
-	
-	public DDCurveData(){
+
+	public DDCurveData() {
 		data = new LinkedList<DDSurvey>();
 	}
-	
+
+	public DDCurveData(double koDepth, double landDepth,
+			double landInclination, double azimuth) {
+
+	}
+
+	public void changeDirection(double depth, double azimuth,
+			double inclination, double targetDepth) {
+	}
+
 	public LinkedList<DDSurvey> getData() {
 		return data;
 	}
@@ -24,18 +33,22 @@ public class DDCurveData {
 		data.add(survey);
 		data.sort(null);
 	}
-	
-	public void addSurvey(double depth, double inclination, double azimuth){
+
+	public void addSurvey(double depth, double inclination, double azimuth) {
 		DDSurvey survey = new DDSurvey(depth, inclination, azimuth);
 		this.addSurvey(survey);
 	}
-	
-	public DDSurvey getSurveyObject(){
+
+	public DDSurvey getSurveyObject() {
 		return new DDSurvey();
 	}
-	
-	public XYSeries getXYSeries(){
+
+	public XYSeries getXYSeries() {
 		return null;
-		
+
+	}
+	
+	public XYSeries getXZSeries() {
+		return null;
 	}
 }
