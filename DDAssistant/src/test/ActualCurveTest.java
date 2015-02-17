@@ -5,13 +5,14 @@ import java.util.LinkedList;
 
 import org.junit.Test;
 
+import ddassistant.ActualCurve;
 import ddassistant.DDCurveData;
 import ddassistant.DDSurvey;
 
 
-public class CurveDataTest {
+public class ActualCurveTest {
 
-	DDCurveData wd = new DDCurveData();
+	ActualCurve wd = new ActualCurve();
 	@Test
 	public void testaddSurvey() {
 		DDSurvey s1 = new DDSurvey(0,0,0);
