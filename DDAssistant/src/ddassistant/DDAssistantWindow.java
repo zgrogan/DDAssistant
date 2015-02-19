@@ -21,7 +21,7 @@ public class DDAssistantWindow extends ApplicationFrame{
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
-	private static final String title = "DDAsistant";
+	private static final String title = "DDAssistant";
 	
 	private XYDataset dataset;
 	private JFreeChart chart;
