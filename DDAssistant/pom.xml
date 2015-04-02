@@ -24,4 +24,6 @@
       </plugin>
     </plugins>
   </build>
+  <name>DDAssistant</name>
+  <url>https://github.com/zgrogan/DDAssistant</url>
 </project>
