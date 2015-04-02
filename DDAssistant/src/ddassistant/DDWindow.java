@@ -1,13 +1,18 @@
 package ddassistant;
 
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.geometry.Rectangle2D;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Box;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
@@ -69,6 +74,34 @@ public class DDWindow extends Application {
     * NEEDS EXPLANATION!
     * */
     private TabPane infoTabPane;
+    private Label depthSliderLabel;
+    private Label zoomSliderLabel;
+    private Label latitudeSliderLabel;
+    private Label longitudeSliderLabel;
+    private Label targetCheckBoxLabel;
+    private Label actualCheckBoxLabel;
+    private Label targetWindowCheckBoxLabel;
+    private Label projectionCheckBoxLabel;
+    private Label hiLowButtonLabel;
+    private Label leftRightButtonLabel;
+
+    private Slider depthSlider;
+
+    private Slider zoomSlider;
+
+    private Slider latitudeSlider;
+
+    private Slider longitutdeSlider;
+
+    private CheckBox targetCheckBox;
+    private CheckBox actualCheckBox;
+    private CheckBox targetWindowCheckBox;
+    private CheckBox projectionCheckBox;
+
+    private Button hiLowButton;
+    private Button leftRightButton;
+
+
 
     /*
     * Tab surveyTab
@@ -113,6 +146,17 @@ public class DDWindow extends Application {
     private Scene scene;
 
     public void start(Stage primaryStage){
+
+        depthSliderLabel = new Label("Depth");
+        zoomSliderLabel = new Label("Zoom");
+        latitudeSliderLabel = new Label("Latitude");
+        longitudeSliderLabel = new Label("Longitude");
+        targetCheckBoxLabel = new Label("Target");
+        actualCheckBoxLabel = new Label("Actual");
+        targetWindowCheckBoxLabel = new Label("Target Window");
+        projectionCheckBoxLabel = new Label("Projection");
+        hiLowButtonLabel = new Label("Hi/Low");
+        leftRightButtonLabel = new Label("Left/Right");
         setScreenSize();
         initComponents();
 
@@ -141,14 +185,69 @@ public class DDWindow extends Application {
         Label controlLabel = new Label("Graph Controls");
         Separator sep = new Separator();
         graphControlPanel = new VBox();
+        graphControlPanel.setSpacing(5);
+        // Add graph controls here(Sliders, checkboxes, etc)
+        // SLIDER
         graphControlPanel.getChildren().addAll(controlLabel, sep);
-        // Add graph controls here(Sliders, checkboxes, etc.
 
-        // This is just for show and should be taken out.
-        for(int i = 0; i < 20; i++){
-            Slider slide = new Slider();
-            graphControlPanel.getChildren().add(slide);
-        }
+        depthSlider = new Slider(0, 100, 0);
+        // Going to set this right here, but may want to implement this into a class of its own
+        depthSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                depthSliderLabel.setText("Depth: " + (int)depthSlider.getValue());
+            }
+        });
+
+        graphControlPanel.getChildren().addAll(depthSliderLabel, depthSlider);
+
+        zoomSlider = new Slider(0, 100, 0);
+        zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                zoomSliderLabel.setText("Zoom: " + (int)zoomSlider.getValue());
+            }
+        });
+        graphControlPanel.getChildren().addAll(zoomSliderLabel, zoomSlider);
+
+        latitudeSlider = new Slider(-180, 180, -180);
+        latitudeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                latitudeSliderLabel.setText("Latitude: " + (int)latitudeSlider.getValue());
+            }
+        });
+        graphControlPanel.getChildren().addAll(latitudeSliderLabel, latitudeSlider);
+
+        longitutdeSlider = new Slider(-180, 180, -180);
+        longitutdeSlider.valueProperty().addListener(new ChangeListener<Number>() {
+            @Override
+            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+                longitudeSliderLabel.setText("Longitude: " + (int)longitutdeSlider.getValue());
+            }
+        });
+        graphControlPanel.getChildren().addAll(longitudeSliderLabel, longitutdeSlider);
+
+        // CHECKBOX
+        targetCheckBox = new CheckBox("Target");
+        graphControlPanel.getChildren().addAll(targetCheckBox);
+
+        actualCheckBox = new CheckBox("Actual");
+        graphControlPanel.getChildren().addAll(actualCheckBox);
+
+        targetWindowCheckBox = new CheckBox("Target Window");
+        graphControlPanel.getChildren().addAll(targetWindowCheckBox);
+
+        projectionCheckBox = new CheckBox("Projection");
+        graphControlPanel.getChildren().addAll(projectionCheckBox);
+
+        // BUTTONS
+        hiLowButton = new Button("Hi/Low");
+        graphControlPanel.getChildren().addAll(hiLowButton);
+
+        leftRightButton = new Button("Left/Right");
+        graphControlPanel.getChildren().addAll(leftRightButton);
+
         return graphControlPanel;
     }
 
@@ -162,6 +261,10 @@ public class DDWindow extends Application {
         infoTabPane = new TabPane();
 
         surveyTab = new Tab("Survey");
+        TableView<String> table = new TableView<String>();
+        TableColumn a = new TableColumn("String1");
+        table.getColumns().add(a);
+        surveyTab.setContent(table);
         slide_rotationTab = new Tab("Slide/Rotation");
         projectionTab = new Tab("Projection");
         BHATab = new Tab("BHA");
@@ -177,8 +280,25 @@ public class DDWindow extends Application {
         borderPane = new BorderPane();
 
         borderPane.setTop(createMenuBar());
-        borderPane.setLeft(createControlPanel());
-        borderPane.setBottom(createInformationPanel());
+
+        Accordion accor0 = new Accordion();
+
+        TitledPane tpane0 = new TitledPane();
+        tpane0.setContent(createControlPanel());
+
+        accor0.getPanes().add(tpane0);
+        borderPane.setLeft(accor0);
+        //borderPane.setLeft(createControlPanel());
+
+        Accordion accor = new Accordion();
+        TitledPane tpane = new TitledPane();
+        tpane.setContent(createInformationPanel());
+        accor.getPanes().add(tpane);
+
+        borderPane.setBottom(accor);
+        //borderPane.setBottom(createInformationPanel());
+        Box a = new Box();
+        borderPane.setRight(a);
 
         scene = new Scene(borderPane, WIDTH, HEIGHT);
     }
