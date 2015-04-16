@@ -35,7 +35,7 @@ public class DDWindow extends Application {
     final private int offset = 50;
 
     /*
-    * BorderPane borderPane
+    * BorderPane borderPanes
     *
     * BorderPane is used to help organize the panels(VBox, HBox, etc)
     * */
