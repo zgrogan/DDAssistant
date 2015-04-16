@@ -30,6 +30,17 @@ public class TargetCurve extends DDCurveData {
 	public TargetCurve(LinkedList<Point3D> ret) {
 		super(ret);
 	}
+	
+	public void addKickOff(float startDepth, float endDepth, float newAzimuth, float newInclination) {
+		LinkedList<Point3D> newPoints = new LinkedList<Point3D>();
+		double startAzimuth = this.getAzimuthAt(startDepth);
+		double startInclination = this.getInclinationAt(startDepth);
+		Point3D startVector = DDCurveData.sphereToCart(1, startAzimuth,
+				startInclination);
+		Point3D endVector = DDCurveData.sphereToCart(1, newAzimuth,
+				newInclination);
+		double angle = startVector.angle(endVector);
+	}
 
 	public void addTurn(float startDepth, float curveLength, float newAzimuth,
 			float newInclination) {

@@ -7,15 +7,19 @@ import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.Scene;
+import javafx.scene.layout.Region;
 
 /**
  * Created by Colee on 4/14/2015.
  */
+@SuppressWarnings("restriction")
 public class DDGraphPane extends HBox{
     private final Label DEPTH_SLIDER_LABEL = new Label("Depth: ");
     private final Label ZOOM_SLIDER_LABEL = new Label("Zoom: ");
     private final Label LATITUDE_SLIDER_LABEL = new Label("Latitude: ");
     private final Label LONGITUDE_SLIDER_LABEL = new Label("Longitude: ");
+    private Scene ddGraphScene;
 
     // Depth Attributes
     private final double DEPTH_SLIDER_MIN = 0;
@@ -48,6 +52,9 @@ public class DDGraphPane extends HBox{
 
     private Slider longitudeSlider;
     private TextField longitudeTextField;
+    
+    private Region graph;
+    private DDWell well;
 
     private void InitGraphControl(){
         // Depth Slider
@@ -99,14 +106,24 @@ public class DDGraphPane extends HBox{
 
     }
     private void InitGraphPane(){
+    	
     }
+    
 
     public DDGraphPane(){
-        InitGraphControl();
-        // InitGraph();
+    	InitGraphControl();
+        InitGraph();
         // InitGraphInfo();
 
         InitGraphPane();
+    }
+    private void InitGraph() {
+		this.graph = new DDGraph(this, well);
+	}
+
+	public DDGraphPane(DDWell well){
+    	this();
+    	this.well = well;
     }
 
 

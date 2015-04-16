@@ -87,9 +87,9 @@ public class DDCurveData {
 		double x = magnitude * Math.cos(azimuth) * Math.sin(inclination);
 		double y = magnitude * Math.cos(inclination);
 		double z = magnitude * Math.sin(azimuth) * Math.sin(inclination);
-		x = Math.abs(x) > 0.000001 ? x : 0;
-		y = Math.abs(y) > 0.000001 ? y : 0;
-		z = Math.abs(z) > 0.000001 ? z : 0;
+		x = (Math.abs(x) > 0.000001) ? x : 0;
+		y = (Math.abs(y) > 0.000001) ? y : 0;
+		z = (Math.abs(z) > 0.000001) ? z : 0;
 		return new Point3D(x,y,z);
 	}
 	
@@ -104,9 +104,9 @@ public class DDCurveData {
 		Point3D pointB = this.getPointAt(depth);
 		Point3D pointA = this.getCurveAbove(depth).getPoints().getLast();
 		Point3D diff = pointA.subtract(pointB);
-		double dx = Math.abs(diff.getX()) > .000001 ? diff.getX() : 0;
-		double dy = Math.abs(diff.getY()) > .000001 ? diff.getY() : 0;
-		double dz = Math.abs(diff.getZ()) > .000001 ? diff.getZ() : 0;
+		double dx = (Math.abs(diff.getX()) > .000001) ? diff.getX() : 0;
+		double dy = (Math.abs(diff.getY()) > .000001) ? diff.getY() : 0;
+		double dz = (Math.abs(diff.getZ()) > .000001) ? diff.getZ() : 0;
 		if (diff == ZERO)
 			return 0;
 		inclination = Math.acos(dy / Math.sqrt(dx * dx + dy * dy + dz * dz));
