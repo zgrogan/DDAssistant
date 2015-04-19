@@ -11,7 +11,7 @@ public class DDSurvey implements Comparable<DDSurvey> {
 		super();
 	}
 	
-	public DDSurvey(double depth, double inclination, double azimuth){
+	public DDSurvey(double depth, double azimuth, double inclination){
 		super();
 		this.depth = depth;
 		this.inclination = inclination;

@@ -1,42 +1,69 @@
 package ddassistant;
 
-import org.jfree.data.xy.XYSeries;
+import java.util.LinkedList;
+import java.util.List;
 
+import javafx.geometry.Point3D;
+
+@SuppressWarnings("restriction")
 public class ActualCurve extends DDCurveData {
 
-	XYSeries xySeries;
-	XYSeries xzSeries;
+	List<DDSurvey> surveys = new LinkedList<DDSurvey>();
 
+	//constructors
 	public ActualCurve() {
-		xySeries = new XYSeries("XY");
-		xySeries.add(0, 0);
-		xzSeries = new XYSeries("XZ");
-		xzSeries.add(0, 0);
+		super();
+		this.surveys = new LinkedList<DDSurvey>();
 	}
 
-	public XYSeries getXYSeries() {
-		XYSeries xys = new XYSeries("ActualCurve XY");
-		xys.add(0, 0);
-		double lastDepth = 0;
-		/*for (DDSurvey survey : data) {
-			//double x = Math.sin(survey.inclination) 
-			//		* (survey.depth - xySeries.get
-
-		}*/
-		return xySeries;
+	public ActualCurve(List<DDSurvey> surveys) {
+		this();
+		init(surveys);
 	}
 
-	public XYSeries getXZSeries() {
-		return xzSeries;
+	// build / rebuild this object based on a list of surveys
+	private void init(List<DDSurvey> surveys) {
+		surveys.sort(null);
+		this.points = new LinkedList<Point3D>();
+		points.add(ZERO);
+		this.surveys = new LinkedList<DDSurvey>();
+		for (DDSurvey survey : surveys) {
+			addSurvey(survey);
+		}
 	}
 
-	/*public void addSurvey(DDSurvey survey) {
-		data.add(survey);
-		data.sort(null);
+	public void addSurvey(DDSurvey survey) {
+		double startDepth = getDepth();
+		if (survey.depth > startDepth) {
+			if(!surveys.contains(survey))
+					surveys.add(survey);
+			double magnitude = survey.depth - startDepth;
+			this.addTurn(startDepth, magnitude, survey.azimuth,	survey.inclination);
+		} else {
+			surveys.add(survey);
+			rebuildCurve();
+		}
 	}
-	public void addSurvey(double depth, double inclination, double azimuth) {
-		DDSurvey survey = new DDSurvey(depth, inclination, azimuth);
+
+	private void rebuildCurve() {
+		this.points = new LinkedList<Point3D>();
+		surveys.sort(null);
+		init(surveys);
+	}
+
+	public double getDepth() {
+		double depth = 0;
+		// add up each segment length, O(n)
+		if (points.size() > 1) {
+			for (int i = 0; i < points.size() - 1; i++) {
+				depth += points.get(i).distance(points.get(i + 1));
+			}
+		}
+		return depth;
+	}
+
+	public void addSurvey(double depth, double azimuth, double inclination) {
+		DDSurvey survey = new DDSurvey(depth, azimuth, inclination);
 		this.addSurvey(survey);
 	}
-	*/
 }

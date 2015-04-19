@@ -17,11 +17,12 @@ public class DDCurveData {
 	static final Point3D ZERO = new Point3D(0,0,0);
 
 	// 3D representation of curve points
-	private LinkedList<Point3D> points;
+	protected LinkedList<Point3D> points;
 	
 	// default constructor
 	public DDCurveData() {
 		points = new LinkedList<Point3D>();
+		points.add(ZERO);
 	}
 	
 	// copy constructor
@@ -110,6 +111,7 @@ public class DDCurveData {
 		if (diff == ZERO)
 			return 0;
 		inclination = Math.acos(dy / Math.sqrt(dx * dx + dy * dy + dz * dz));
+		if (Double.isNaN(inclination)) return 0;
 		return inclination * 180 / Math.PI;
 	}
 	
@@ -118,9 +120,8 @@ public class DDCurveData {
 		double azimuth;
 		Point3D pointB = this.getPointAt(depth);
 		Point3D pointA = this.getCurveAbove(depth).getPoints().getLast();
-		Point3D diff = pointA.subtract(pointB);
+		Point3D diff = pointB.subtract(pointA);
 		double dx = diff.getX();
-		double dy = diff.getY();
 		double dz = diff.getZ();
 		if (dx == 0 && dz == 0)
 			return 0;
@@ -132,20 +133,63 @@ public class DDCurveData {
 		return points;
 	}
 	
+	// get only the curve that is above the specified depth
 	public DDCurveData getCurveAbove(double depth) {
 		LinkedList<Point3D> ret = new LinkedList<Point3D>();
 		float loopDepth = 0;
 
-		for (int i = 0; i < this.getPoints().size() && loopDepth < depth; i++) {
+		for (int i = 0; (i < this.getPoints().size()) && (loopDepth < depth); i++) {
 			ret.add(getPoints().get(i));
-			if (i != getPoints().size() - 1) {
-				loopDepth += getPoints().get(i).distance(getPoints().get(i + 1));
+			double distance = getPoints().get(i).distance(getPoints().get(i+1));
+			if ((i != getPoints().size() - 1) && distance > 0.00001) {
+				loopDepth += distance;
 			}
 
 		}
 		return new DDCurveData(ret);
 	}
 
+	public void addTurn(double startDepth, double curveLength, double newAzimuth,
+			double newInclination) {
+		LinkedList<Point3D> newPoints = new LinkedList<Point3D>();
+		double startAzimuth = this.getAzimuthAt(startDepth);
+		double startInclination = this.getInclinationAt(startDepth);
+		Point3D startVector = DDCurveData.sphereToCart(1, startAzimuth,
+				startInclination);
+		Point3D endVector = DDCurveData.sphereToCart(1, newAzimuth,
+				newInclination);
+		double angle = startVector.angle(endVector);
+		if (Double.isNaN(angle))
+			angle = 0;
+
+		// keep all points before startDepth
+		for (Point3D point : this.getCurveAbove(startDepth).getPoints()) {
+			newPoints.add(point);
+		}
+		if(!newPoints.getLast().equals(this.getPointAt(startDepth)))
+			newPoints.add(this.getPointAt(startDepth));
+		this.setPoints(newPoints); // discard the rest
+		
+		// if we were going straight down, startAzimuth is not a good number
+		if (startInclination < 0.001)
+			startAzimuth = newAzimuth;
+
+		// we'll add a segment for each degree we turn
+		int numCuts = (int) angle + 1;
+		double segmentLength = curveLength / numCuts;
+		double segmentAzimuth = (newAzimuth - startAzimuth) / numCuts;
+		double segmentInclination = (newInclination - startInclination)
+				/ numCuts;
+		for (int i = 0; i < numCuts; i++) {
+			Point3D newPoint = this.getPoints().getLast().add(DDCurveData.sphereToCart(segmentLength,
+					startAzimuth + segmentAzimuth * i, 180 - (startInclination + i * segmentInclination)));
+			this.getPoints().add(newPoint);
+		}
+		
+		// now add a final point along the desired line to get it headed that way.
+		Point3D finalPoint = this.getPoints().getLast().add(sphereToCart(0.01, newAzimuth, 180-newInclination));
+		this.getPoints().add(finalPoint);
+	}
 
 	public void setPoints(LinkedList<Point3D> points) {
 		this.points = points;
