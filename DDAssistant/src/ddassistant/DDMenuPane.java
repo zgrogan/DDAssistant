@@ -2,10 +2,7 @@ package ddassistant;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
+import javafx.scene.control.*;
 
 /**
  * Created by Colee on 4/14/2015.
@@ -111,6 +108,7 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
         InitViewMenu();
         InitExpandMenu();
         InitHelpMenu();
+        Button button = new Button();
         this.getMenus().addAll(fileMenu, viewMenu, expandMenu, helpMenu);
     }
 

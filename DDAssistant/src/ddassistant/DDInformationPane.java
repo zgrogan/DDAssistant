@@ -49,11 +49,11 @@ public class DDInformationPane extends VBox {
     * */
     private Tab wellDataTab;
 
-    private void InitInformationPane(){
+    private void initInformationPane(){
 
     }
 
     public DDInformationPane(){
-        InitInformationPane();
+        initInformationPane();
     }
 }
