@@ -4,12 +4,10 @@ import java.util.LinkedList;
 
 import javafx.geometry.Point3D;
 
-import org.jfree.data.xy.XYSeries;
-
 @SuppressWarnings("restriction")
 public class TargetCurve extends DDCurveData {
 
-	private float targetDepth = 0;
+	private double targetDepth = 0;
 
 	public TargetCurve() {
 		super();
@@ -19,7 +17,7 @@ public class TargetCurve extends DDCurveData {
 		super(ddCurveData);
 	}
 
-	public TargetCurve(float targetDepth) {
+	public TargetCurve(double targetDepth) {
 		this.targetDepth = targetDepth;
 		Point3D start = new Point3D(0, 0, 0);
 		Point3D end = new Point3D(0, -targetDepth, 0);
@@ -31,69 +29,53 @@ public class TargetCurve extends DDCurveData {
 		super(ret);
 	}
 
-	public void addTurn(float startDepth, float curveLength, float newAzimuth,
-			float newInclination) {
-		LinkedList<Point3D> newPoints = new LinkedList<Point3D>();
+	// don't use, not working yet
+	public void addKickOff(double startDepth, double endDepth, double newAzimuth,
+			double newInclination) {
+		// arclength = radius * angle;
+		// get the angle
 		double startAzimuth = this.getAzimuthAt(startDepth);
 		double startInclination = this.getInclinationAt(startDepth);
 		Point3D startVector = DDCurveData.sphereToCart(1, startAzimuth,
 				startInclination);
 		Point3D endVector = DDCurveData.sphereToCart(1, newAzimuth,
 				newInclination);
-		double angle = startVector.angle(endVector);
+		double angle = Math.PI * startVector.angle(endVector) / 180;
 
-		// keep all points before startDepth
-		for (Point3D point : this.getCurveAbove(startDepth).getPoints()) {
-			newPoints.add(point);
-		}
-		newPoints.add(this.getPointAt(startDepth));
-		this.setPoints(newPoints); // discard the rest
-
-		// we'll add a segment for each degree we turn
-		int numCuts = (int) angle + 1;
-		for (int i = 0; i < numCuts; i++) {
-			double segmentLength = curveLength / numCuts;
-			double segmentAzimuth = (newAzimuth - startAzimuth) / numCuts;
-			double lastAzimuth = this.getAzimuthAt(startDepth + i
-					* segmentLength);
-			double segmentInclination = (newInclination - startInclination)
-					/ numCuts;
-			double lastInclination = this.getInclinationAt(startDepth + i
-					* segmentLength);
-			Point3D newSegment = this.getPoints().getLast().add(DDCurveData.sphereToCart(segmentLength,
-					segmentAzimuth + lastAzimuth, segmentInclination
-							+ lastInclination));
-			this.getPoints().add(newSegment);
-		}
+		// determine radius of circle
+		double radius = Math.abs((endDepth - startDepth)
+				/ (Math.cos(newInclination * Math.PI / 180) - Math
+						.cos(startInclination * Math.PI / 180)));
 		
+		// determine length of curve
+		double arcLength = radius * angle;
+		// now add the turn
+		addTurn(startDepth, arcLength, newAzimuth, newInclination);
+	}
+
+	// overridden addTurn method, updates final point and targetDepth if necessary.
+	public void addTurn(double startDepth, double curveLength, double newAzimuth,
+			double newInclination) {
+		// add the turn
+		super.addTurn(startDepth, curveLength, newAzimuth, newInclination);
+
+		// update targetDepth or add last curve segment
 		if (targetDepth <= startDepth + curveLength)
 			targetDepth = startDepth + curveLength;
-		else {// here we add a final point at target depth along desired path
+		else {
 			Point3D endOfCurve = this.getPointAt(startDepth + curveLength);
 			double segmentLength = targetDepth - (startDepth + curveLength);
-			getPoints().add(endOfCurve.add(DDCurveData.sphereToCart(segmentLength, newAzimuth, newInclination)));
+			getPoints().add(
+					endOfCurve.add(DDCurveData.sphereToCart(segmentLength,
+							newAzimuth, 180 - newInclination)));
 		}
 	}
 
-	public void changeDirection(double depth, double azimuth,
-			double inclination, double targetDepth) {
-	}
-
-	public XYSeries getXYSeries() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public XYSeries getXZSeries() {
-		// TODO Auto-generated method stub
-		return null;
-	}
-
-	public float getTargetDepth() {
+	public double getTargetDepth() {
 		return targetDepth;
 	}
 
-	public void setTargetDepth(float targetDepth) {
+	public void setTargetDepth(double targetDepth) {
 		this.targetDepth = targetDepth;
 	}
 }
