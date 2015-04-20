@@ -1,14 +1,12 @@
 package ddassistant;
 
 import java.util.LinkedList;
-import java.util.List;
-
 import javafx.geometry.Point3D;
 
 @SuppressWarnings("restriction")
 public class ActualCurve extends DDCurveData {
 
-	List<DDSurvey> surveys = new LinkedList<DDSurvey>();
+	LinkedList<DDSurvey> surveys = new LinkedList<DDSurvey>();
 
 	//constructors
 	public ActualCurve() {
@@ -16,20 +14,25 @@ public class ActualCurve extends DDCurveData {
 		this.surveys = new LinkedList<DDSurvey>();
 	}
 
-	public ActualCurve(List<DDSurvey> surveys) {
+	public ActualCurve(LinkedList<DDSurvey> surveys) {
 		this();
 		init(surveys);
 	}
-
-	// build / rebuild this object based on a list of surveys
-	private void init(List<DDSurvey> surveys) {
-		surveys.sort(null);
+	
+	// rebuild points
+	private void init() {
 		this.points = new LinkedList<Point3D>();
 		points.add(ZERO);
-		this.surveys = new LinkedList<DDSurvey>();
+		surveys.sort(null);
 		for (DDSurvey survey : surveys) {
 			addSurvey(survey);
-		}
+		}		
+	}
+
+	// build / rebuild this object based on a list of surveys
+	private void init(LinkedList<DDSurvey> surveys) {
+		this.surveys = surveys;
+		init();
 	}
 
 	public void addSurvey(DDSurvey survey) {
@@ -65,5 +68,15 @@ public class ActualCurve extends DDCurveData {
 	public void addSurvey(double depth, double azimuth, double inclination) {
 		DDSurvey survey = new DDSurvey(depth, azimuth, inclination);
 		this.addSurvey(survey);
+	}
+
+	public LinkedList<DDSurvey> getSurveys() {
+		return surveys;
+	}
+
+	public void removeSurvey(DDSurvey survey) {
+		if (surveys.contains(survey))
+			surveys.remove(survey);
+		this.init();
 	}
 }

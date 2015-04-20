@@ -4,12 +4,10 @@ import java.util.LinkedList;
 
 import javafx.geometry.Point3D;
 
-import org.jfree.data.xy.XYSeries;
-
 @SuppressWarnings("restriction")
 public class TargetCurve extends DDCurveData {
 
-	private float targetDepth = 0;
+	private double targetDepth = 0;
 
 	public TargetCurve() {
 		super();
@@ -19,7 +17,7 @@ public class TargetCurve extends DDCurveData {
 		super(ddCurveData);
 	}
 
-	public TargetCurve(float targetDepth) {
+	public TargetCurve(double targetDepth) {
 		this.targetDepth = targetDepth;
 		Point3D start = new Point3D(0, 0, 0);
 		Point3D end = new Point3D(0, -targetDepth, 0);
@@ -73,7 +71,7 @@ public class TargetCurve extends DDCurveData {
 		}
 	}
 
-	public float getTargetDepth() {
+	public double getTargetDepth() {
 		return targetDepth;
 	}
 
