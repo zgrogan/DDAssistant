@@ -27,6 +27,13 @@ public class DDSurvey implements Comparable<DDSurvey> {
 	}
 	
 	@Override
+	public String toString() {
+		String ret = new String("");
+		ret += "Depth = " + depth + " Azimuth = " + azimuth + " Inclination = " + inclination;
+		return ret;
+	}
+	
+	@Override
 	public boolean equals(Object ob) {
 		DDSurvey o = (DDSurvey)ob;
 		return ((this.depth == o.depth) && (this.inclination == o.inclination)
