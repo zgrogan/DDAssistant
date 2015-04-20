@@ -45,6 +45,18 @@ public class CurveTest {
 		assertTrue (in1 > 20 && in1 < 25);
 		assertTrue (az2 > 124 && az2 < 126);
 		assertTrue (in2 > 65 && in2 < 70);		
+		
+		// test addKickOff method
+		tc = new TargetCurve(10000);
+		tc.addKickOff(5000, 6000, 167, 80);
+		az1 = tc.getAzimuthAt(4999);
+		az2 = tc.getAzimuthAt(9000);
+		in1 = tc.getInclinationAt(4999);
+		in2 = tc.getInclinationAt(9000);
+		assertTrue(az1 == 0);
+		assertTrue(az2 > 166.99 && az2 < 167.01);
+		assertTrue(in1 ==0);
+		assertTrue(in2 > 79.99 && in2 < 80.01);
 	}
 	
 	@Test

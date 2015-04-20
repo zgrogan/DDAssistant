@@ -45,9 +45,10 @@ public class TargetCurve extends DDCurveData {
 		double angle = Math.PI * startVector.angle(endVector) / 180;
 
 		// determine radius of circle
-		double radius = (endDepth - startDepth)
+		double radius = Math.abs((endDepth - startDepth)
 				/ (Math.cos(newInclination * Math.PI / 180) - Math
-						.cos(startInclination * Math.PI / 180));
+						.cos(startInclination * Math.PI / 180)));
+		
 		// determine length of curve
 		double arcLength = radius * angle;
 		// now add the turn

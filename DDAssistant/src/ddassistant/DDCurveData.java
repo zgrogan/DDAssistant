@@ -138,7 +138,7 @@ public class DDCurveData {
 		LinkedList<Point3D> ret = new LinkedList<Point3D>();
 		float loopDepth = 0;
 
-		for (int i = 0; (i < this.getPoints().size()) && (loopDepth < depth); i++) {
+		for (int i = 0; (i < this.getPoints().size() - 1) && (loopDepth < depth); i++) {
 			ret.add(getPoints().get(i));
 			double distance = getPoints().get(i).distance(getPoints().get(i+1));
 			if ((i != getPoints().size() - 1) && distance > 0.00001) {
