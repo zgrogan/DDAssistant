@@ -53,7 +53,7 @@ public class DDGraph extends Region{
         subScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
             @Override
             public void handle(MouseEvent event) {
-                if(event.isPrimaryButtonDown()){
+                if (event.isPrimaryButtonDown()) {
                     double mouseX = event.getX();
                     double mouseY = event.getY();
 
@@ -108,8 +108,7 @@ public class DDGraph extends Region{
 
         this.getChildren().add(subScene);
     }
-    public DDGraph(DDWindow window, DDWell well){
-        this.window = window;
+    public DDGraph(DDWell well){
         this.well = well;
     }
 

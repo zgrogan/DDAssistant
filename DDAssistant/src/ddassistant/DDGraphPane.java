@@ -129,7 +129,11 @@ public class DDGraphPane extends Region{
         initGraphControls();
 
         // *TEST*
-        graph = new DDGraph();
+
+        DDWell well = new DDWell();
+        well.addSurvey(500, 0, 3);
+
+        graph = new DDGraph(well);
         hbox.getChildren().add(graph);
         // *ENDTEST*
 
