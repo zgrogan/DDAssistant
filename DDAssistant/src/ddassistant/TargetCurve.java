@@ -8,6 +8,7 @@ import javafx.geometry.Point3D;
 public class TargetCurve extends DDCurveData {
 
 	private double targetDepth = 0;
+	private double landingDepth = 0;
 
 	public TargetCurve() {
 		super();
@@ -51,6 +52,8 @@ public class TargetCurve extends DDCurveData {
 		double arcLength = radius * angle;
 		// now add the turn
 		addTurn(startDepth, arcLength, newAzimuth, newInclination);
+		// update landingDepth
+		landingDepth = startDepth + arcLength;
 	}
 
 	// overridden addTurn method, updates final point and targetDepth if necessary.
@@ -77,5 +80,9 @@ public class TargetCurve extends DDCurveData {
 
 	public void setTargetDepth(double targetDepth) {
 		this.targetDepth = targetDepth;
+	}
+
+	public double getLandingDepth() {
+		return landingDepth;
 	}
 }
