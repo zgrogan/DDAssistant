@@ -3,6 +3,7 @@ package ddassistant;
 import java.util.LinkedList;
 
 public class DDWell {
+	// private members
 	private TargetCurve targetCurve;
 	private ActualCurve actualCurve;
 	private double targetWindowHi;
@@ -10,11 +11,13 @@ public class DDWell {
 	private double targetWindowLeft;
 	private double targetWindowRight;
 
+	// constructors
 	public DDWell() {
 		targetCurve = new TargetCurve();
 		actualCurve = new ActualCurve();
 	}
 
+	// public methods
 	public LinkedList<DDSurvey> getSurveys() {
 		return actualCurve.getSurveys();
 	}
@@ -23,12 +26,19 @@ public class DDWell {
 		targetCurve = new TargetCurve(targetDepth);
 	}
 
+	// put a turn in the target curve
 	public void addTargetTurn(double startDepth, double curveLength,
 			double newAzimuth, double newInclination) {
 		targetCurve
 				.addTurn(startDepth, curveLength, newAzimuth, newInclination);
 	}
 	
+	// add a kickoff.  endTVD refers to true vertical depth at end of curve
+	public void addKickOff(double startDepth, double endTVD, double newAzimuth, double newInclination) {
+		targetCurve.addKickOff(startDepth, endTVD, newAzimuth, newInclination);
+	}
+	
+	// get survey information into actualCurve
 	public void addSurvey(DDSurvey survey) {
 		actualCurve.addSurvey(survey);
 	}
@@ -41,7 +51,17 @@ public class DDWell {
 	public void removeSurvey(DDSurvey survey) {
 		actualCurve.removeSurvey(survey);
 	}
+	
+	public void editSurvey(DDSurvey oldSurvey, DDSurvey newSurvey) {
+		oldSurvey = newSurvey;
+		actualCurve.rebuildCurve();
+	}
+	
+	public void editSurvey(DDSurvey survey, double depth, double azimuth, double inclination) {
+		editSurvey(survey, new DDSurvey(depth, azimuth, inclination));
+	}
 
+	// define / retreive target window
 	public double getTargetWindowHi() {
 		return targetWindowHi;
 	}

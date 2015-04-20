@@ -30,8 +30,8 @@ public class TargetCurve extends DDCurveData {
 	}
 
 	// don't use, not working yet
-	public void addKickOff(float startDepth, float endDepth, float newAzimuth,
-			float newInclination) {
+	public void addKickOff(double startDepth, double endDepth, double newAzimuth,
+			double newInclination) {
 		// arclength = radius * angle;
 		// get the angle
 		double startAzimuth = this.getAzimuthAt(startDepth);
@@ -54,8 +54,8 @@ public class TargetCurve extends DDCurveData {
 	}
 
 	// overridden addTurn method, updates final point and targetDepth if necessary.
-	public void addTurn(float startDepth, float curveLength, float newAzimuth,
-			float newInclination) {
+	public void addTurn(double startDepth, double curveLength, double newAzimuth,
+			double newInclination) {
 		// add the turn
 		super.addTurn(startDepth, curveLength, newAzimuth, newInclination);
 
@@ -75,7 +75,7 @@ public class TargetCurve extends DDCurveData {
 		return targetDepth;
 	}
 
-	public void setTargetDepth(float targetDepth) {
+	public void setTargetDepth(double targetDepth) {
 		this.targetDepth = targetDepth;
 	}
 }

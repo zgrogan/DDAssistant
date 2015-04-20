@@ -40,15 +40,16 @@ public class ActualCurve extends DDCurveData {
 		if (survey.depth > startDepth) {
 			if(!surveys.contains(survey))
 					surveys.add(survey);
-			double magnitude = survey.depth - startDepth;
-			this.addTurn(startDepth, magnitude, survey.azimuth,	survey.inclination);
+			double curveLength = survey.depth - startDepth;
+			this.addTurn(startDepth, curveLength, survey.azimuth,	survey.inclination);
 		} else {
 			surveys.add(survey);
 			rebuildCurve();
 		}
 	}
 
-	private void rebuildCurve() {
+	// rebuilds points based on surveys;
+	public void rebuildCurve() {
 		this.points = new LinkedList<Point3D>();
 		surveys.sort(null);
 		init(surveys);
