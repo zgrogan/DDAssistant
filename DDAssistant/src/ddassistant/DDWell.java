@@ -1,26 +1,44 @@
 package ddassistant;
 
 import java.util.LinkedList;
-
 import javafx.geometry.Point3D;
 
 @SuppressWarnings("restriction")
 public class DDWell {
-	// private members
+	// curves
 	private TargetCurve targetCurve;
 	private ActualCurve actualCurve;
+	
+	// target window
 	private double targetWindowHi;
 	private double targetWindowLow;
 	private double targetWindowLeft;
 	private double targetWindowRight;
+	
+	// slides
+	private LinkedList<Slide> slides;
 
 	// constructors
 	public DDWell() {
 		targetCurve = new TargetCurve();
 		actualCurve = new ActualCurve();
+		slides = new LinkedList<Slide>();
 	}
+	
 
 	// public methods
+	public void addSlide(Slide slide) {
+		slides.add(slide);
+	}
+	
+	public void addSlide(double startDepth, double length, double direction) {
+		Slide slide = new Slide(startDepth, length, direction);
+	}
+	
+	public void removeSlide(Slide slide) {
+		slides.remove(slide);
+	}
+
 	public LinkedList<DDSurvey> getSurveys() {
 		return actualCurve.getSurveys();
 	}
@@ -64,7 +82,7 @@ public class DDWell {
 		editSurvey(survey, new DDSurvey(depth, azimuth, inclination));
 	}
 	
-	// access to sets of point
+	// access to sets of points
 	public LinkedList<Point3D> getTargetPoints() {
 		return targetCurve.getPoints();
 	}

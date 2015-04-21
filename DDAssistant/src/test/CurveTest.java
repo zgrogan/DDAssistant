@@ -60,6 +60,7 @@ public class CurveTest {
 		assertTrue(in1 ==0);
 		assertTrue(in2 > 89.99 && in2 < 90.01);
 		assertTrue(Math.abs(tc.getTVDAt(tc.getLandingDepth()) - 6000) < 0.01);
+		assertTrue(Math.abs(tc.getTVDAt(tc.getLandingDepth() - 1) - 6000) > 0.01);
 		
 		// verify cardinal directions
 		tc = new TargetCurve(10000);

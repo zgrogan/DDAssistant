@@ -33,8 +33,8 @@ public class TargetCurve extends DDCurveData {
 		super(ret);
 	}
 
-	// don't use, not working yet
-	public void addKickOff(double startDepth, double endDepth, double newAzimuth,
+	// lets user define a curve with a given landingDepth (TVD)
+	public void addKickOff(double startDepth, double landingTVD, double newAzimuth,
 			double newInclination) {
 		// arclength = radius * angle;
 		// get the angle
@@ -47,7 +47,7 @@ public class TargetCurve extends DDCurveData {
 		double angle = Math.PI * startVector.angle(endVector) / 180;
 
 		// determine radius of circle
-		double radius = Math.abs((endDepth - startDepth)
+		double radius = Math.abs((landingTVD - startDepth)
 				/ (Math.cos(newInclination * Math.PI / 180) - Math
 						.cos(startInclination * Math.PI / 180)));
 		
@@ -58,7 +58,7 @@ public class TargetCurve extends DDCurveData {
 		// hack, correct for inconsistencies in landing depth from expected value
 		// inefficient, but effective
 		while(Math.abs(error) > 0.00001) {
-			error = endDepth - this.getTVDAt(startDepth + arcLength);
+			error = landingTVD - this.getTVDAt(startDepth + arcLength);
 			arcLength += error;
 			addTurn(startDepth, arcLength, newAzimuth, newInclination);
 		}
