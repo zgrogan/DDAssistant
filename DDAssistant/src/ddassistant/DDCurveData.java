@@ -8,13 +8,13 @@ import javafx.geometry.Point3D;
 public class DDCurveData {
 	
 	// unit vectors for cardinal directions
-	static final Point3D NORTH = new Point3D(1,0,0);
-	static final Point3D SOUTH = new Point3D(-1,0,0);
-	static final Point3D EAST = new Point3D(0,0,1);
-	static final Point3D WEST = new Point3D(0,0,-1);
-	static final Point3D DOWN = new Point3D(0,1,0);
-	static final Point3D UP = new Point3D(0,-1,0);
-	static final Point3D ZERO = new Point3D(0,0,0);
+	public static final Point3D NORTH = new Point3D(1,0,0);
+	public static final Point3D SOUTH = new Point3D(-1,0,0);
+	public static final Point3D EAST = new Point3D(0,0,1);
+	public static final Point3D WEST = new Point3D(0,0,-1);
+	public static final Point3D DOWN = new Point3D(0,1,0);
+	public static final Point3D UP = new Point3D(0,-1,0);
+	public static final Point3D ZERO = new Point3D(0,0,0);
 
 	// 3D representation of curve points
 	protected LinkedList<Point3D> points;
@@ -42,6 +42,11 @@ public class DDCurveData {
 
 	public static double getDistance(Point3D pointA, Point3D pointB) {
 		return pointA.distance(pointB);
+	}
+	
+	// get a Point3D vector that represents unit vector at specified depth
+	public Point3D getUnitVectorAt(double depth) {
+		return sphereToCart(1, getAzimuthAt(depth), getInclinationAt(depth));
 	}
 
 	// returns the point in the curve at the specified depth
@@ -125,7 +130,7 @@ public class DDCurveData {
 		double dz = diff.getZ();
 		if (dx == 0 && dz == 0)
 			return 0;
-		azimuth = Math.acos(dx / Math.sqrt(dx * dx + dz * dz));
+		azimuth = ((dz < 0) ? -1 : 1) * Math.acos(dx / Math.sqrt(dx * dx + dz * dz));
 		return azimuth * 180 / Math.PI;
 	}
 

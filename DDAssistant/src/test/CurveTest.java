@@ -1,9 +1,11 @@
 package test;
 import static org.junit.Assert.*;
+import javafx.geometry.Point3D;
 
 import org.junit.Test;
 
 import ddassistant.ActualCurve;
+import ddassistant.DDCurveData;
 import ddassistant.TargetCurve;
 
 @SuppressWarnings("restriction")
@@ -57,6 +59,27 @@ public class CurveTest {
 		assertTrue(az2 > 166.99 && az2 < 167.01);
 		assertTrue(in1 ==0);
 		assertTrue(in2 > 79.99 && in2 < 80.01);
+		
+		// verify cardinal directions
+		tc = new TargetCurve(10000);
+		// turn north, east, south, west
+		tc.addTurn(1000,100,0,90);
+		tc.addTurn(2000, 100, 90, 90);
+		tc.addTurn(3000,100,180,90);
+		tc.addTurn(5000,100,-90,90);
+		Point3D northVector = tc.getUnitVectorAt(1500);
+		assertTrue(northVector.distance(DDCurveData.NORTH) < 0.0001);
+		Point3D eastVector = tc.getUnitVectorAt(2500);
+		assertTrue(eastVector.distance(DDCurveData.EAST) < 0.0001);
+		Point3D southVector = tc.getUnitVectorAt(3500);
+		assertTrue(southVector.distance(DDCurveData.SOUTH) < 0.0001);
+		Point3D westVector = tc.getUnitVectorAt(5500);
+		assertTrue(westVector.distance(DDCurveData.WEST) < 0.0001);
+		
+		// turn up
+		tc.addTurn(6000, 100, -90, 180);
+		Point3D upVector = tc.getUnitVectorAt(6500);
+		assertTrue(upVector.distance(DDCurveData.UP) < 0.0001);
 	}
 	
 	@Test
