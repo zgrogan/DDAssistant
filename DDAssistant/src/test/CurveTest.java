@@ -12,18 +12,18 @@ public class CurveTest {
 	public void testTargetCurve() {
 		// check TargetCurve creation and straight down points.
 		TargetCurve tc = new TargetCurve(10000f);
-		assertTrue(tc.getPointAt(5000f).getY() == -5000.0);
+		assertTrue(tc.getPointAt(5000f).getY() == 5000.0);
 		assertTrue(tc.getPointAt(5000f).getX() == 0.0);
 		assertTrue(tc.getPointAt(5000f).getZ() == 0.0);
 		assertTrue(tc.getAzimuthAt(8000) == 0.0);
 		assertTrue(tc.getInclinationAt(8000) == 0.0);
 		
 		// add a turn
-		tc.addTurn(5000, 500, 120, 45);
+		tc.addTurn(5000, 500, 120, 30);
 		double az8k = tc.getAzimuthAt(8000);
 		double in8k = tc.getInclinationAt(8000);
 		assertTrue(az8k > 119.99 && az8k < 120.01);
-		assertTrue(in8k > 44.99 && in8k < 45.01);
+		assertTrue(in8k > 29.99 && in8k < 30.01);
 		
 		// add another turn & check directions are correct
 		tc.addTurn(7000, 200, 130, 90);
@@ -32,7 +32,7 @@ public class CurveTest {
 		az8k = tc.getAzimuthAt(8000);
 		in8k = tc.getInclinationAt(8000);
 		assertTrue(az6k > 119.99 && az6k < 120.01);
-		assertTrue(in6k > 44.99 && in6k < 45.01);
+		assertTrue(in6k > 29.99 && in6k < 30.01);
 		assertTrue(az8k > 129.99 && az8k < 130.01);
 		assertTrue(in8k > 89.99 && in8k < 90.01);
 		
@@ -42,9 +42,9 @@ public class CurveTest {
 		double az2 = tc.getAzimuthAt(7100);
 		double in2 = tc.getInclinationAt(7100);
 		assertTrue (az1 > 119.99 && az1 < 120.01);
-		assertTrue (in1 > 20 && in1 < 25);
+		assertTrue (in1 > 14 && in1 < 16);
 		assertTrue (az2 > 124 && az2 < 126);
-		assertTrue (in2 > 65 && in2 < 70);		
+		assertTrue (in2 > 59 && in2 < 61);		
 		
 		// test addKickOff method
 		tc = new TargetCurve(10000);

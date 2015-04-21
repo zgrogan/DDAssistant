@@ -12,8 +12,8 @@ public class DDCurveData {
 	static final Point3D SOUTH = new Point3D(-1,0,0);
 	static final Point3D EAST = new Point3D(0,0,1);
 	static final Point3D WEST = new Point3D(0,0,-1);
-	static final Point3D DOWN = new Point3D(0,-1,0);
-	static final Point3D UP = new Point3D(0,1,0);
+	static final Point3D DOWN = new Point3D(0,1,0);
+	static final Point3D UP = new Point3D(0,-1,0);
 	static final Point3D ZERO = new Point3D(0,0,0);
 
 	// 3D representation of curve points
@@ -112,7 +112,7 @@ public class DDCurveData {
 			return 0;
 		inclination = Math.acos(dy / Math.sqrt(dx * dx + dy * dy + dz * dz));
 		if (Double.isNaN(inclination)) return 0;
-		return inclination * 180 / Math.PI;
+		return 180 - (inclination * 180 / Math.PI);
 	}
 	
 	// get the azimuth at a specified depth
@@ -182,12 +182,12 @@ public class DDCurveData {
 				/ numCuts;
 		for (int i = 0; i < numCuts; i++) {
 			Point3D newPoint = this.getPoints().getLast().add(DDCurveData.sphereToCart(segmentLength,
-					startAzimuth + segmentAzimuth * i, 180 - (startInclination + i * segmentInclination)));
+					startAzimuth + segmentAzimuth * i,  (startInclination + i * segmentInclination)));
 			this.getPoints().add(newPoint);
 		}
 		
 		// now add a final point along the desired line to get it headed that way.
-		Point3D finalPoint = this.getPoints().getLast().add(sphereToCart(0.01, newAzimuth, 180-newInclination));
+		Point3D finalPoint = this.getPoints().getLast().add(sphereToCart(0.01, newAzimuth, newInclination));
 		this.getPoints().add(finalPoint);
 	}
 

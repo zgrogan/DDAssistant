@@ -21,7 +21,7 @@ public class TargetCurve extends DDCurveData {
 	public TargetCurve(double targetDepth) {
 		this.targetDepth = targetDepth;
 		Point3D start = new Point3D(0, 0, 0);
-		Point3D end = new Point3D(0, -targetDepth, 0);
+		Point3D end = new Point3D(0, targetDepth, 0);
 		this.getPoints().add(start);
 		this.getPoints().add(end);
 	}
@@ -70,7 +70,7 @@ public class TargetCurve extends DDCurveData {
 			double segmentLength = targetDepth - (startDepth + curveLength);
 			getPoints().add(
 					endOfCurve.add(DDCurveData.sphereToCart(segmentLength,
-							newAzimuth, 180 - newInclination)));
+							newAzimuth,  newInclination)));
 		}
 	}
 
