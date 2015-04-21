@@ -152,9 +152,9 @@ public class DDCurveData {
 		float loopDepth = 0;
 
 		for (int i = 0; (i < this.getPoints().size() - 1) && (loopDepth < depth); i++) {
-			ret.add(getPoints().get(i));
 			double distance = getPoints().get(i).distance(getPoints().get(i+1));
 			if ((i != getPoints().size() - 1) && distance > 0.00001) {
+				ret.add(getPoints().get(i));
 				loopDepth += distance;
 			}
 

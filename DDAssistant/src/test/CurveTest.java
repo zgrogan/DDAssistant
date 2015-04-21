@@ -50,7 +50,7 @@ public class CurveTest {
 		
 		// test addKickOff method
 		tc = new TargetCurve(10000);
-		tc.addKickOff(5000, 6000, 167, 80);
+		tc.addKickOff(5000, 6000, 167, 90);
 		az1 = tc.getAzimuthAt(4999);
 		az2 = tc.getAzimuthAt(9000);
 		in1 = tc.getInclinationAt(4999);
@@ -58,7 +58,8 @@ public class CurveTest {
 		assertTrue(az1 == 0);
 		assertTrue(az2 > 166.99 && az2 < 167.01);
 		assertTrue(in1 ==0);
-		assertTrue(in2 > 79.99 && in2 < 80.01);
+		assertTrue(in2 > 89.99 && in2 < 90.01);
+		assertTrue(Math.abs(tc.getTVDAt(tc.getLandingDepth()) - 6000) < 0.01);
 		
 		// verify cardinal directions
 		tc = new TargetCurve(10000);

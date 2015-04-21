@@ -51,10 +51,17 @@ public class TargetCurve extends DDCurveData {
 				/ (Math.cos(newInclination * Math.PI / 180) - Math
 						.cos(startInclination * Math.PI / 180)));
 		
-		// determine length of curve
 		double arcLength = radius * angle;
 		// now add the turn
 		addTurn(startDepth, arcLength, newAzimuth, newInclination);
+		double error = 1;
+		// hack, correct for inconsistencies in landing depth from expected value
+		// inefficient, but effective
+		while(Math.abs(error) > 0.00001) {
+			error = endDepth - this.getTVDAt(startDepth + arcLength);
+			arcLength += error;
+			addTurn(startDepth, arcLength, newAzimuth, newInclination);
+		}
 		// update landingDepth
 		landingDepth = startDepth + arcLength;
 	}
