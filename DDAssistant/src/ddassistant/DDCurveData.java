@@ -4,6 +4,9 @@ import java.util.LinkedList;
 
 import javafx.geometry.Point3D;
 
+// DDCurveData represents a generic set of points in 3D space of
+// of a directional well.
+// Known Subclasses: TargetCurve, ActualCurve
 @SuppressWarnings("restriction")
 public class DDCurveData {
 	
@@ -39,6 +42,11 @@ public class DDCurveData {
 			points.add(new Point3D(point.getX(), point.getY(), point.getZ()));
 		}
 	}
+	
+	// TVD is true vertical depth, the y coordinate
+	public double getTVDAt(double depth) {
+		return getPointAt(depth).getY();
+	}
 
 	public static double getDistance(Point3D pointA, Point3D pointB) {
 		return pointA.distance(pointB);
@@ -69,7 +77,7 @@ public class DDCurveData {
 				// we found the segment to cut
 				if (loopLength >= depth) {
 					// avoid divide by zero
-					double fractionToCut = 1.0f;
+					double fractionToCut = 1;
 					if (loopLength != tempLength) {
 						fractionToCut = (depth - tempLength)
 								/ (loopLength - tempLength);
@@ -154,6 +162,8 @@ public class DDCurveData {
 		return new DDCurveData(ret);
 	}
 
+	// add a turn of specified curveLength at startDepth to new direction
+	// guarantees no more than 1 degree edge in curve.
 	public void addTurn(double startDepth, double curveLength, double newAzimuth,
 			double newInclination) {
 		LinkedList<Point3D> newPoints = new LinkedList<Point3D>();
@@ -167,13 +177,13 @@ public class DDCurveData {
 		if (Double.isNaN(angle))
 			angle = 0;
 
-		// keep all points before startDepth
+		// keep all points before startDepth, discard the rest
 		for (Point3D point : this.getCurveAbove(startDepth).getPoints()) {
 			newPoints.add(point);
 		}
 		if(!newPoints.getLast().equals(this.getPointAt(startDepth)))
 			newPoints.add(this.getPointAt(startDepth));
-		this.setPoints(newPoints); // discard the rest
+		this.setPoints(newPoints);
 		
 		// if we were going straight down, startAzimuth is not a good number
 		if (startInclination < 0.001)

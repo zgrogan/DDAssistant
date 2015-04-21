@@ -4,6 +4,9 @@ import java.util.LinkedList;
 
 import javafx.geometry.Point3D;
 
+// represents a directional driller's target curve.  maintains a target depth
+// and landingDepth, as well as ability to add a kickOff curve based
+// on vertical distance to landing depth.
 @SuppressWarnings("restriction")
 public class TargetCurve extends DDCurveData {
 
