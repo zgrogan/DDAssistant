@@ -4,7 +4,7 @@ import java.util.LinkedList;
 
 import javafx.geometry.Point3D;
 
-// DDCurveData represents a generic set of points in 3D space of
+// DDCurveData represents a set of points in 3D space of
 // of a directional well.
 // Known Subclasses: TargetCurve, ActualCurve
 @SuppressWarnings("restriction")
