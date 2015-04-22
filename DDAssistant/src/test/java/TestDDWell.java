@@ -24,6 +24,5 @@ public class TestDDWell {
 		well.addSurvey(survey);
 		well.addSurvey(600, 0, 5);
 		assertTrue(well.getSurveys().size() == 2);
-		System.out.println(well.getActualCurve());
 	}
 }
