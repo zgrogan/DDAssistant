@@ -2,10 +2,14 @@ package ddassistant;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.RadioMenuItem;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.BorderPane;
+import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+
+import javax.xml.soap.Text;
 
 /**
  * Created by Colee on 4/14/2015.
@@ -29,6 +33,7 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
     private final String string_GraphMenu = "Graph";
     private final String string_InfoMenu = "Information";
     private final String string_DefaultMenu = "Default";
+    private final String string_NewMenuItem = "New";
 
     private MenuBar menuBar;
 
@@ -57,10 +62,76 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
     private MenuItem infoMenu;
     private MenuItem defaultMenu;
 
+    private MenuItem newMenuItem;
+
+    private DDWindow window;
+
 
     private void InitFileMenu(){
         fileMenu = new Menu(string_FileMenu);
-        //fileMenu.getItems().addAll();
+
+        newMenuItem = new MenuItem(string_NewMenuItem);
+        newMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Label depthLabel = new Label("Depth: ");
+                Label azimuthLabel = new Label("Azimuth: ");
+                Label inclinationLabel = new Label("Inclination: ");
+
+                TextField depthTextField = new TextField();
+                TextField azimuthTextField = new TextField();
+                TextField inclinationTextField = new TextField();
+
+                Button createButton = new Button("Create");
+
+                Button cancelButton = new Button("Cancel");
+
+                VBox labelBox = new VBox();
+                VBox textFieldBox = new VBox();
+                VBox buttonBox = new VBox();
+
+                buttonBox.getChildren().addAll(createButton, cancelButton);
+
+                labelBox.getChildren().addAll(depthLabel, azimuthLabel, inclinationLabel);
+                textFieldBox.getChildren().addAll(depthTextField, azimuthTextField, inclinationTextField);
+
+                BorderPane borderPane = new BorderPane();
+                borderPane.setLeft(labelBox);
+                borderPane.setCenter(textFieldBox);
+                borderPane.setBottom(buttonBox);
+
+                Group newRoot = new Group();
+                newRoot.getChildren().add(borderPane);
+                Scene newScene = new Scene(newRoot, 400, 200);
+
+                Stage newDialog = new Stage();
+                newDialog.setScene(newScene);
+                newDialog.setTitle("New");
+                newDialog.show();
+
+                createButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if(window.getWell() != null){
+                            System.out.println("Well is not empty.");
+                            window.removeWell();
+                            DDWell well = new DDWell();
+                            well.createTargetCurve(Double.valueOf(depthTextField.getText()));
+                            window.setWell(well);
+                        }else if(window.getWell() == null){
+                            DDWell well = new DDWell();
+                            well.createTargetCurve(Double.valueOf(depthTextField.getText()));
+                            window.setWell(well);
+                        }else{
+                            System.out.println("Error!");
+                        }
+                        newDialog.close();
+                    }
+                });
+            }
+        });
+
+        fileMenu.getItems().addAll(newMenuItem);
     }
 
     private void InitViewMenu(){
@@ -114,7 +185,8 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
         this.getMenus().addAll(fileMenu, viewMenu, expandMenu, helpMenu);
     }
 
-    public DDMenuPane(){
+    public DDMenuPane(DDWindow window){
+        this.window = window;
         InitMainBar();
     }
 

@@ -49,11 +49,20 @@ public class DDInformationPane extends VBox {
     * */
     private Tab wellDataTab;
 
-    private void InitInformationPane(){
+    /*
+    *   DDWindow window
+    *
+    *   This DDWindow variable is used to communicate with the DDWindow class to
+    *       pass and receive information to and from the DDGraphPane and DDMenuBar
+    * */
+    private DDWindow window;
+
+    private void initInformationPane(){
 
     }
 
-    public DDInformationPane(){
-        InitInformationPane();
+    public DDInformationPane(DDWindow window){
+        this.window = window;
+        initInformationPane();
     }
 }
