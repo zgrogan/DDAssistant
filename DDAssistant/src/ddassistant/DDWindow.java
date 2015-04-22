@@ -110,6 +110,9 @@ public class DDWindow extends Application {
 
     public void start(Stage primaryStage){
         setScreenSize();
+        well = new DDWell();
+        well.createTargetCurve(10000);
+        well.addKickOff(5000, 6000, 167, 90);
 
         ddMenuPane = new DDMenuPane(this);
         ddGraphPane = new DDGraphPane(this);
