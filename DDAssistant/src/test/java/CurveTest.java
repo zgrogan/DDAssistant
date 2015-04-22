@@ -1,4 +1,5 @@
-package test;
+package test.java;
+
 import static org.junit.Assert.*;
 import javafx.geometry.Point3D;
 

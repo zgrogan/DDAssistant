@@ -7,7 +7,7 @@ import javafx.geometry.Point3D;
 public class DDWell {
 	// curves
 	private TargetCurve targetCurve;
-	private ActualCurve actualCurve;
+	private final ActualCurve actualCurve;
 	
 	// target window
 	private double targetWindowHi;
@@ -124,6 +124,7 @@ public class DDWell {
 		this.targetWindowRight = targetWindowRight;
 	}
 
+        // give access to curves
 	public TargetCurve getTargetCurve() {
 		return targetCurve;
 	}
