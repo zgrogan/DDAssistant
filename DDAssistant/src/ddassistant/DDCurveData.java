@@ -4,17 +4,20 @@ import java.util.LinkedList;
 
 import javafx.geometry.Point3D;
 
+// DDCurveData represents a generic set of points in 3D space of
+// of a directional well.
+// Known Subclasses: TargetCurve, ActualCurve
 @SuppressWarnings("restriction")
 public class DDCurveData {
 	
 	// unit vectors for cardinal directions
-	static final Point3D NORTH = new Point3D(1,0,0);
-	static final Point3D SOUTH = new Point3D(-1,0,0);
-	static final Point3D EAST = new Point3D(0,0,1);
-	static final Point3D WEST = new Point3D(0,0,-1);
-	static final Point3D DOWN = new Point3D(0,-1,0);
-	static final Point3D UP = new Point3D(0,1,0);
-	static final Point3D ZERO = new Point3D(0,0,0);
+	public static final Point3D NORTH = new Point3D(1,0,0);
+	public static final Point3D SOUTH = new Point3D(-1,0,0);
+	public static final Point3D EAST = new Point3D(0,0,1);
+	public static final Point3D WEST = new Point3D(0,0,-1);
+	public static final Point3D DOWN = new Point3D(0,1,0);
+	public static final Point3D UP = new Point3D(0,-1,0);
+	public static final Point3D ZERO = new Point3D(0,0,0);
 
 	// 3D representation of curve points
 	protected LinkedList<Point3D> points;
@@ -39,9 +42,19 @@ public class DDCurveData {
 			points.add(new Point3D(point.getX(), point.getY(), point.getZ()));
 		}
 	}
+	
+	// TVD is true vertical depth, the y coordinate
+	public double getTVDAt(double depth) {
+		return getPointAt(depth).getY();
+	}
 
 	public static double getDistance(Point3D pointA, Point3D pointB) {
 		return pointA.distance(pointB);
+	}
+	
+	// get a Point3D vector that represents unit vector at specified depth
+	public Point3D getUnitVectorAt(double depth) {
+		return sphereToCart(1, getAzimuthAt(depth), getInclinationAt(depth));
 	}
 
 	// returns the point in the curve at the specified depth
@@ -64,7 +77,7 @@ public class DDCurveData {
 				// we found the segment to cut
 				if (loopLength >= depth) {
 					// avoid divide by zero
-					double fractionToCut = 1.0f;
+					double fractionToCut = 1;
 					if (loopLength != tempLength) {
 						fractionToCut = (depth - tempLength)
 								/ (loopLength - tempLength);
@@ -112,7 +125,7 @@ public class DDCurveData {
 			return 0;
 		inclination = Math.acos(dy / Math.sqrt(dx * dx + dy * dy + dz * dz));
 		if (Double.isNaN(inclination)) return 0;
-		return inclination * 180 / Math.PI;
+		return 180 - (inclination * 180 / Math.PI);
 	}
 	
 	// get the azimuth at a specified depth
@@ -125,7 +138,7 @@ public class DDCurveData {
 		double dz = diff.getZ();
 		if (dx == 0 && dz == 0)
 			return 0;
-		azimuth = Math.acos(dx / Math.sqrt(dx * dx + dz * dz));
+		azimuth = ((dz < 0) ? -1 : 1) * Math.acos(dx / Math.sqrt(dx * dx + dz * dz));
 		return azimuth * 180 / Math.PI;
 	}
 
@@ -139,9 +152,9 @@ public class DDCurveData {
 		float loopDepth = 0;
 
 		for (int i = 0; (i < this.getPoints().size() - 1) && (loopDepth < depth); i++) {
-			ret.add(getPoints().get(i));
 			double distance = getPoints().get(i).distance(getPoints().get(i+1));
 			if ((i != getPoints().size() - 1) && distance > 0.00001) {
+				ret.add(getPoints().get(i));
 				loopDepth += distance;
 			}
 
@@ -149,6 +162,8 @@ public class DDCurveData {
 		return new DDCurveData(ret);
 	}
 
+	// add a turn of specified curveLength at startDepth to new direction
+	// guarantees no more than 1 degree edge in curve.
 	public void addTurn(double startDepth, double curveLength, double newAzimuth,
 			double newInclination) {
 		LinkedList<Point3D> newPoints = new LinkedList<Point3D>();
@@ -162,13 +177,13 @@ public class DDCurveData {
 		if (Double.isNaN(angle))
 			angle = 0;
 
-		// keep all points before startDepth
+		// keep all points before startDepth, discard the rest
 		for (Point3D point : this.getCurveAbove(startDepth).getPoints()) {
 			newPoints.add(point);
 		}
 		if(!newPoints.getLast().equals(this.getPointAt(startDepth)))
 			newPoints.add(this.getPointAt(startDepth));
-		this.setPoints(newPoints); // discard the rest
+		this.setPoints(newPoints);
 		
 		// if we were going straight down, startAzimuth is not a good number
 		if (startInclination < 0.001)
@@ -182,12 +197,12 @@ public class DDCurveData {
 				/ numCuts;
 		for (int i = 0; i < numCuts; i++) {
 			Point3D newPoint = this.getPoints().getLast().add(DDCurveData.sphereToCart(segmentLength,
-					startAzimuth + segmentAzimuth * i, 180 - (startInclination + i * segmentInclination)));
+					startAzimuth + segmentAzimuth * i,  (startInclination + i * segmentInclination)));
 			this.getPoints().add(newPoint);
 		}
 		
 		// now add a final point along the desired line to get it headed that way.
-		Point3D finalPoint = this.getPoints().getLast().add(sphereToCart(0.01, newAzimuth, 180-newInclination));
+		Point3D finalPoint = this.getPoints().getLast().add(sphereToCart(0.01, newAzimuth, newInclination));
 		this.getPoints().add(finalPoint);
 	}
 

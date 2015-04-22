@@ -4,6 +4,9 @@ import java.util.LinkedList;
 
 import javafx.geometry.Point3D;
 
+// represents a directional driller's target curve.  maintains a target depth
+// and landingDepth, as well as ability to add a kickOff curve based
+// on vertical distance to landing depth.
 @SuppressWarnings("restriction")
 public class TargetCurve extends DDCurveData {
 
@@ -21,7 +24,7 @@ public class TargetCurve extends DDCurveData {
 	public TargetCurve(double targetDepth) {
 		this.targetDepth = targetDepth;
 		Point3D start = new Point3D(0, 0, 0);
-		Point3D end = new Point3D(0, -targetDepth, 0);
+		Point3D end = new Point3D(0, targetDepth, 0);
 		this.getPoints().add(start);
 		this.getPoints().add(end);
 	}
@@ -30,8 +33,8 @@ public class TargetCurve extends DDCurveData {
 		super(ret);
 	}
 
-	// don't use, not working yet
-	public void addKickOff(double startDepth, double endDepth, double newAzimuth,
+	// lets user define a curve with a given landingDepth (TVD)
+	public void addKickOff(double startDepth, double landingTVD, double newAzimuth,
 			double newInclination) {
 		// arclength = radius * angle;
 		// get the angle
@@ -44,14 +47,21 @@ public class TargetCurve extends DDCurveData {
 		double angle = Math.PI * startVector.angle(endVector) / 180;
 
 		// determine radius of circle
-		double radius = Math.abs((endDepth - startDepth)
+		double radius = Math.abs((landingTVD - startDepth)
 				/ (Math.cos(newInclination * Math.PI / 180) - Math
 						.cos(startInclination * Math.PI / 180)));
 		
-		// determine length of curve
 		double arcLength = radius * angle;
 		// now add the turn
 		addTurn(startDepth, arcLength, newAzimuth, newInclination);
+		double error = 1;
+		// hack, correct for inconsistencies in landing depth from expected value
+		// inefficient, but effective
+		while(Math.abs(error) > 0.00001) {
+			error = landingTVD - this.getTVDAt(startDepth + arcLength);
+			arcLength += error;
+			addTurn(startDepth, arcLength, newAzimuth, newInclination);
+		}
 		// update landingDepth
 		landingDepth = startDepth + arcLength;
 	}
@@ -70,7 +80,7 @@ public class TargetCurve extends DDCurveData {
 			double segmentLength = targetDepth - (startDepth + curveLength);
 			getPoints().add(
 					endOfCurve.add(DDCurveData.sphereToCart(segmentLength,
-							newAzimuth, 180 - newInclination)));
+							newAzimuth,  newInclination)));
 		}
 	}
 

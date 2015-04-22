@@ -35,17 +35,23 @@ public class ActualCurve extends DDCurveData {
 		init();
 	}
 
+	// adds a survey and rebuilds curve if necessary
 	public void addSurvey(DDSurvey survey) {
 		double startDepth = getDepth();
 		if (survey.depth > startDepth) {
 			if(!surveys.contains(survey))
 					surveys.add(survey);
 			double curveLength = survey.depth - startDepth;
-			this.addTurn(startDepth, curveLength, survey.azimuth,	survey.inclination);
+			this.addTurn(startDepth, curveLength, survey.azimuth, survey.inclination);
 		} else {
 			surveys.add(survey);
 			rebuildCurve();
 		}
+	}
+
+	public void addSurvey(double depth, double azimuth, double inclination) {
+		DDSurvey survey = new DDSurvey(depth, azimuth, inclination);
+		this.addSurvey(survey);
 	}
 
 	// rebuilds points based on surveys;
@@ -64,11 +70,6 @@ public class ActualCurve extends DDCurveData {
 			}
 		}
 		return depth;
-	}
-
-	public void addSurvey(double depth, double azimuth, double inclination) {
-		DDSurvey survey = new DDSurvey(depth, azimuth, inclination);
-		this.addSurvey(survey);
 	}
 
 	public LinkedList<DDSurvey> getSurveys() {
