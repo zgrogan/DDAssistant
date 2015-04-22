@@ -96,19 +96,36 @@ public class DDWindow extends Application {
     * */
     private Scene scene;
 
+    private DDMenuPane ddMenuPane;
+    private DDGraphPane ddGraphPane;
+    private DDInformationPane ddInfoPane;
+
+    /*
+    *   DDWell well
+    *
+    *   At any time there should be only one DDWell object active.
+    *
+    * */
+    private DDWell well;
+
     public void start(Stage primaryStage){
-        /*depthSliderLabel = new Label("Depth");
-        zoomSliderLabel = new Label("Zoom");
-        latitudeSliderLabel = new Label("Latitude");
-        longitudeSliderLabel = new Label("Longitude");
-        targetCheckBoxLabel = new Label("Target");
-        actualCheckBoxLabel = new Label("Actual");
-        targetWindowCheckBoxLabel = new Label("Target Window");
-        projectionCheckBoxLabel = new Label("Projection");
-        hiLowButtonLabel = new Label("Hi/Low");
-        leftRightButtonLabel = new Label("Left/Right");*/
         setScreenSize();
-        initComponents(primaryStage);
+
+        ddMenuPane = new DDMenuPane(this);
+        ddGraphPane = new DDGraphPane(this);
+        ddInfoPane = new DDInformationPane(this);
+        createInformationPanel();
+
+        borderPane = new BorderPane();
+        borderPane.setTop(ddMenuPane);
+        borderPane.setCenter(ddGraphPane);
+
+        SplitPane sPane = new SplitPane();
+        sPane.setOrientation(Orientation.VERTICAL);
+        sPane.getItems().addAll(ddGraphPane, informationPanel);
+        sPane.setDividerPosition(0, 0.8);
+        borderPane.setCenter(sPane);
+        scene = new Scene(borderPane, WIDTH, HEIGHT);
 
         primaryStage.setTitle("DDAssistant");
         primaryStage.setScene(scene);
@@ -143,7 +160,6 @@ public class DDWindow extends Application {
         table.getColumns().add(0, a);
         table.getItems().add("Hello");
         surveyTab.setContent(table);
-        //informationPanel.setVgrow(infoTabPane, Priority.ALWAYS);
         slide_rotationTab = new Tab("Slide/Rotation");
         projectionTab = new Tab("Projection");
         BHATab = new Tab("BHA");
@@ -157,21 +173,26 @@ public class DDWindow extends Application {
         informationPanel.getChildren().addAll(infoTabPane);
         return informationPanel;
     }
-    private void initComponents(Stage primaryStage){
-        DDMenuPane ddMenuPane = new DDMenuPane();
-        DDGraphPane ddGraphPane = new DDGraphPane(this);
-        DDInformationPane ddInfoPane = new DDInformationPane();
-        createInformationPanel();
 
-        borderPane = new BorderPane();
-        borderPane.setTop(ddMenuPane);
-        borderPane.setCenter(ddGraphPane);
+    // These functions are the main communications between each pane
 
-        SplitPane sPane = new SplitPane();
-        sPane.setOrientation(Orientation.VERTICAL);
-        sPane.getItems().addAll(ddGraphPane, informationPanel);
-        sPane.setDividerPosition(0, 0.8);
-        borderPane.setCenter(sPane);
-        scene = new Scene(borderPane, WIDTH, HEIGHT);
+    /*
+    *
+    *  setWell
+    *
+    *
+    * */
+    public void setWell(DDWell well){
+        this.well = well;
+        ddGraphPane.createGraph();
+    }
+
+    public void removeWell(){
+        this.well = null;
+        ddGraphPane.removeGraph();
+    }
+
+    public DDWell getWell(){
+        return well;
     }
 }

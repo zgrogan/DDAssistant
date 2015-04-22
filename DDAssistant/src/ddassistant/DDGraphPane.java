@@ -30,12 +30,12 @@ public class DDGraphPane extends Region{
 
     // Depth Attributes
     private final double DEPTH_SLIDER_MIN = 0;
-    private final double DEPTH_SLIDER_MAX = 100;
+    private double DEPTH_SLIDER_MAX = 100;
     public final static double DEPTH_SLIDER_DEFAULT = 0;
 
     // Zoom Attributes
     private final double ZOOM_SLIDER_MIN = 0;
-    private final double ZOOM_SLIDER_MAX = 150;
+    private final double ZOOM_SLIDER_MAX = 250;
     public final static double ZOOM_SLIDER_DEFAULT = 30;
 
     // Latitude Attributes
@@ -60,9 +60,11 @@ public class DDGraphPane extends Region{
     private Slider longitudeSlider;
     private TextField longitudeTextField;
 
+    private DDWindow window;
     private DDGraph graph;
 
-    private HBox hbox; // HBox used to store the All the Graph Controls
+    private HBox hbox; // HBox used to store all of the Graph Controls
+    private VBox vbox; // VBox used to store
 
     private void initGraphControls(){
         // Depth Slider
@@ -114,36 +116,23 @@ public class DDGraphPane extends Region{
         hbox.getChildren().addAll(LONGITUDE_SLIDER_LABEL, longitudeTextField, longitudeSlider);
     }
 
-    private void HandleDepthSlider(){
-
-    }
-
-    private void initGraphPane(){
-
-    }
-
     public DDGraphPane(DDWindow window){
-
-        VBox vbox = new VBox();
+        this.window = window;
+        vbox = new VBox();
         hbox = new HBox();
         initGraphControls();
-
-        // *TEST*
-
-        DDWell well = new DDWell();
-        well.addSurvey(500, 0, 3);
-
-        graph = new DDGraph(well);
-        hbox.getChildren().add(graph);
-        // *ENDTEST*
-
-
-        // InitGraph();
-        // InitGraphInfo();
-
-        initGraphPane();
-        vbox.getChildren().addAll(hbox, graph);
+        vbox.getChildren().add(hbox);
         this.getChildren().add(vbox);
+    }
+
+    public void createGraph(){
+        graph = new DDGraph(window.getWell());
+        vbox.getChildren().add(graph);
+    }
+
+    public void removeGraph(){
+        vbox.getChildren().removeAll(graph);
+        graph = null;
     }
 
     public int getZoomSliderIntValue(){

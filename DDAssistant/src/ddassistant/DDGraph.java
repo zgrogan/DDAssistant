@@ -47,20 +47,11 @@ public class DDGraph extends Region{
 
     private PhongMaterial material;
 
+    private LinkedList<org.fxyz.geometry.Point3D> points;
+
     private void createContent(){
         root = new Group();
         SubScene subScene = new SubScene(root, DDWindow.WIDTH, DDWindow.HEIGHT);
-        subScene.setOnMouseDragged(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                if (event.isPrimaryButtonDown()) {
-                    double mouseX = event.getX();
-                    double mouseY = event.getY();
-
-
-                }
-            }
-        });
         subScene.setFill(Color.ALICEBLUE);
 
         // Create Rotation and Translate Properties
@@ -76,48 +67,38 @@ public class DDGraph extends Region{
                 new Rotate(longitudeProperty, Rotate.X_AXIS),
                 new Translate(0, depthProperty, -zoomProperty)
         );
-
         camera.setFarClip(500);
         subScene.setCamera(camera);
-
-        // Create and Add points
-        List<org.fxyz.geometry.Point3D> points = new LinkedList<org.fxyz.geometry.Point3D>();
-        for(int i = 0; i < 10; i++){
-            org.fxyz.geometry.Point3D point = new org.fxyz.geometry.Point3D(i, (float) Math.pow(i, 2), i);
-            points.add(point);
-        }
-        PolyLine3D line3d = new PolyLine3D(points, 1, Color.RED);
-        root.getChildren().addAll(line3d);
-
-
         material = new PhongMaterial(Color.RED);
+
         // Create the Box
         testBox = new Box(5, 0.2, 0.2);
         testBox.setMaterial(material);
-
-
-
-
-
-
-
-        // Build the scene graph
-
-
-
 
         this.getChildren().add(subScene);
     }
     public DDGraph(DDWell well){
         this.well = well;
+        createContent();
+        build();
     }
 
     public DDGraph(){
         createContent();
     }
 
+    // Displays the content from DDWell onto the graph
     public void build(){
 
+        LinkedList<Point3D> tempWellList = well.getTargetPoints();
+
+        points = new LinkedList<org.fxyz.geometry.Point3D>();
+        for(Point3D point: tempWellList){
+            System.out.println("Adding: X: " + (float)point.getX() + ", Y: " + (float) point.getY() + ", Z: " + (float)point.getZ());
+            points.add(new org.fxyz.geometry.Point3D((float) point.getX(), (float) point.getY(), (float)point.getZ()));
+        }
+        PolyLine3D line3d = new PolyLine3D(points, 1, Color.BLACK);
+        root.getChildren().addAll(line3d);
     }
 
 
@@ -161,7 +142,7 @@ public class DDGraph extends Region{
         camera.getTransforms().addAll(
                 new Rotate(-latitudeProperty, Rotate.Y_AXIS),
                 new Rotate(-longitudeProperty, Rotate.X_AXIS),
-                new Translate(testBox.getTranslateY(), testBox.getTranslateX(), -zoomProperty)
+                new Translate(points.get(depth).x, points.get(depth).y, -zoomProperty)
         );
     }
 
