@@ -41,8 +41,8 @@ public class DDGraph extends Region {
 	private Translate zoomTranslate;
 
 	private double depthProperty;
-	private double latitudeProperty;
-	private double longitudeProperty;
+	private double azimuthProperty;
+	private double inclinationProperty;
 	private double zoomProperty;
 
 	private PhongMaterial material;
@@ -50,7 +50,7 @@ public class DDGraph extends Region {
 	private LinkedList<org.fxyz.geometry.Point3D> points;
 	private TargetCurve targetCurve;
 	private ActualCurve actualCurve;
-	
+
 	private SubScene subScene;
 
 	private void createContent() {
@@ -59,16 +59,16 @@ public class DDGraph extends Region {
 		subScene.setFill(Color.ALICEBLUE);
 
 		// Create Rotation and Translate Properties
-		latitudeProperty = DDGraphPane.LATITUDE_SLIDER_DEFAULT;
-		longitudeProperty = DDGraphPane.LONGITUDE_SLIDER_DEFAULT;
+		azimuthProperty = DDGraphPane.AZIMUTH_SLIDER_DEFAULT;
+		inclinationProperty = DDGraphPane.INCLINATION_SLIDER_DEFAULT;
 		zoomProperty = DDGraphPane.ZOOM_SLIDER_DEFAULT;
 		depthProperty = DDGraphPane.DEPTH_SLIDER_DEFAULT;
 
 		// Setup and Add Camera
 		camera = new PerspectiveCamera(true);
 		camera.getTransforms().addAll(
-				new Rotate(latitudeProperty, Rotate.Y_AXIS),
-				new Rotate(longitudeProperty, Rotate.X_AXIS),
+				new Rotate(azimuthProperty, Rotate.Y_AXIS),
+				new Rotate(inclinationProperty, Rotate.X_AXIS),
 				new Translate(0, depthProperty, -zoomProperty));
 		camera.setFarClip(500);
 		subScene.setCamera(camera);
@@ -84,6 +84,7 @@ public class DDGraph extends Region {
 	public DDGraph(DDGraphPane pane, DDWell well) {
 		this.well = well;
 		this.pane = pane;
+		this.targetCurve = well.getTargetCurve();
 		createContent();
 		build();
 	}
@@ -112,42 +113,39 @@ public class DDGraph extends Region {
 
 	public void changeZoom(double depth) {
 		this.zoomProperty = depth;
-
-		camera.getTransforms().remove(0, 3);
-		camera.getTransforms().addAll(
-				new Rotate(-latitudeProperty, Rotate.Y_AXIS),
-				new Rotate(-longitudeProperty, Rotate.X_AXIS),
-				new Translate(0, depthProperty, -zoomProperty));
+		resetCameraPosition();
 	}
 
-	public void changeLatitude(double latitude) {
-		this.latitudeProperty = latitude;
-
-		camera.getTransforms().remove(0, 3);
-		camera.getTransforms().addAll(
-				new Rotate(-latitudeProperty, Rotate.Y_AXIS),
-				new Rotate(-longitudeProperty, Rotate.X_AXIS),
-				new Translate(0, depthProperty, -zoomProperty));
+	public void changeazimuth(double azimuth) {
+		this.azimuthProperty = azimuth;
+		resetCameraPosition();
 	}
 
-	public void changeLongitude(double longitude) {
-		this.longitudeProperty = longitude;
-
-		camera.getTransforms().remove(0, 3);
-		camera.getTransforms().addAll(
-				new Rotate(-latitudeProperty, Rotate.Y_AXIS),
-				new Rotate(-longitudeProperty, Rotate.X_AXIS),
-				new Translate(0, depthProperty, -zoomProperty));
+	public void changeinclination(double inclination) {
+		this.inclinationProperty = inclination;
+		resetCameraPosition();
 	}
 
 	public void changeDepth(double depth) {
 		this.depthProperty = depth;
-		Point3D point = targetCurve.getPointAt(depth);
+		resetCameraPosition();
+	}
+
+	public void resetCameraPosition() {
+		Point3D translateVector = DDCurveData.sphereToCart(zoomProperty,
+				inclinationProperty, azimuthProperty);
+		System.out.println("TV" + translateVector);
+		Point3D depthAdjustedTranslateVector = targetCurve.getPointAt(
+				this.depthProperty).add(translateVector);
+		System.out.println("DAJ" + depthAdjustedTranslateVector);
 		camera.getTransforms().remove(0, 3);
 		camera.getTransforms().addAll(
-				new Rotate(-latitudeProperty, Rotate.Y_AXIS),
-				new Rotate(-longitudeProperty, Rotate.X_AXIS),
-				new Translate(point.getX(), point.getY(), point.getZ()));
+				new Rotate(-azimuthProperty, Rotate.Y_AXIS),
+				new Rotate(-inclinationProperty, Rotate.X_AXIS),
+				new Translate(depthAdjustedTranslateVector.getX(),
+						depthAdjustedTranslateVector.getY(),
+						depthAdjustedTranslateVector.getZ()));
+
 	}
 
 }

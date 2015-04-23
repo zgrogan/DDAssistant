@@ -29,7 +29,7 @@ public class DDGraphPane extends HBox {
 
 	// Depth Attributes
 	private final double DEPTH_SLIDER_MIN = 0;
-	private double DEPTH_SLIDER_MAX = 1;
+	private double depthSliderMax = 50;
 	public final static double DEPTH_SLIDER_DEFAULT = 0;
 
 	// Zoom Attributes
@@ -38,14 +38,14 @@ public class DDGraphPane extends HBox {
 	public final static double ZOOM_SLIDER_DEFAULT = 30;
 
 	// Latitude Attributes
-	private final double LATITUDE_SLIDER_MIN = -180;
-	private final double LATITUDE_SLIDER_MAX = 180;
-	public final static double LATITUDE_SLIDER_DEFAULT = 0;
+	private final double AZIMUTH_SLIDER_MIN = -180;
+	private final double AZIMUTH_SLIDER_MAX = 180;
+	public final static double AZIMUTH_SLIDER_DEFAULT = 0;
 
 	// Longitude Attributes
-	private final double LONGITUDE_SLIDER_MIN = -180;
-	private final double LONGITUDE_SLIDER_MAX = 180;
-	public final static double LONGITUDE_SLIDER_DEFAULT = 0;
+	private final double INCLINATION_SLIDER_MIN = 0;
+	private final double INCLINATION_SLIDER_MAX = 180;
+	public final static double INCLINATION_SLIDER_DEFAULT = 90;
 
 	private Slider depthSlider;
 	private TextField depthTextField;
@@ -120,7 +120,7 @@ public class DDGraphPane extends HBox {
 		hbox = new HBox();
 		vbox = new VBox();
 		// Depth Slider
-		depthSlider = new Slider(DEPTH_SLIDER_MIN, DEPTH_SLIDER_MAX,
+		depthSlider = new Slider(DEPTH_SLIDER_MIN, depthSliderMax,
 				DEPTH_SLIDER_DEFAULT);
 		depthTextField = new TextField(Double.toString(DEPTH_SLIDER_DEFAULT));
 		depthTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
@@ -135,7 +135,7 @@ public class DDGraphPane extends HBox {
 		hbox.getChildren().addAll(ZOOM_SLIDER_LABEL, zoomTextField, zoomSlider);
 
 		// Latitude Slider
-		latitudeSlider = new Slider(LATITUDE_SLIDER_MIN, LATITUDE_SLIDER_MAX,
+		latitudeSlider = new Slider(AZIMUTH_SLIDER_MIN, AZIMUTH_SLIDER_MAX,
 				LATITUDE_SLIDER_DEFAULT);
 		latitudeTextField = new TextField(
 				Double.toString(LATITUDE_SLIDER_DEFAULT));
@@ -144,8 +144,8 @@ public class DDGraphPane extends HBox {
 				latitudeSlider);
 
 		// Longitude Slider
-		longitudeSlider = new Slider(LONGITUDE_SLIDER_MIN,
-				LONGITUDE_SLIDER_MAX, LONGITUDE_SLIDER_DEFAULT);
+		longitudeSlider = new Slider(INCLINATION_SLIDER_MIN,
+				INCLINATION_SLIDER_MAX, LONGITUDE_SLIDER_DEFAULT);
 		longitudeTextField = new TextField(
 				Double.toString(LONGITUDE_SLIDER_DEFAULT));
 		longitudeTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
