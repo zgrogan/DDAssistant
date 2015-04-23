@@ -2,9 +2,7 @@ package test.java;
 
 import static org.junit.Assert.*;
 import javafx.geometry.Point3D;
-
 import org.junit.Test;
-
 import ddassistant.ActualCurve;
 import ddassistant.DDCurveData;
 import ddassistant.TargetCurve;
@@ -63,9 +61,6 @@ public class CurveTest {
 		assertTrue(Math.abs(tc.getTVDAt(tc.getLandingDepth()) - 6000) < 0.01);
 		assertTrue(Math.abs(tc.getTVDAt(tc.getLandingDepth() - 1) - 6000) > 0.01);
 		assertTrue(Math.abs(tc.getTVDAt(tc.getLandingDepth() + 1) - 6000) < 0.01);
-		
-		for (int i = 5000; i < 7000; i++)
-			System.out.println(tc.getTVDAt(i));
 		
 		// verify cardinal directions
 		tc = new TargetCurve(10000);

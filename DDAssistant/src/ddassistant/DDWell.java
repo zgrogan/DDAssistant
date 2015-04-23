@@ -1,20 +1,26 @@
 package ddassistant;
 
+import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.List;
+
 import javafx.geometry.Point3D;
 
 @SuppressWarnings("restriction")
 public class DDWell {
+	// well identifying informaton
+	private HashMap<String, String> wellInfo;
+
 	// curves
 	private TargetCurve targetCurve;
 	private final ActualCurve actualCurve;
-	
+
 	// target window
 	private double targetWindowHi;
 	private double targetWindowLow;
 	private double targetWindowLeft;
 	private double targetWindowRight;
-	
+
 	// slides
 	private LinkedList<Slide> slides;
 
@@ -23,18 +29,18 @@ public class DDWell {
 		targetCurve = new TargetCurve();
 		actualCurve = new ActualCurve();
 		slides = new LinkedList<Slide>();
+		wellInfo = new HashMap<String, String>();
 	}
-	
 
 	// public methods
 	public void addSlide(Slide slide) {
 		slides.add(slide);
 	}
-	
+
 	public void addSlide(double startDepth, double length, double direction) {
 		Slide slide = new Slide(startDepth, length, direction);
 	}
-	
+
 	public void removeSlide(Slide slide) {
 		slides.remove(slide);
 	}
@@ -53,40 +59,42 @@ public class DDWell {
 		targetCurve
 				.addTurn(startDepth, curveLength, newAzimuth, newInclination);
 	}
-	
-	// add a kickoff.  endTVD refers to true vertical depth at end of curve
-	public void addKickOff(double startDepth, double endTVD, double newAzimuth, double newInclination) {
+
+	// add a kickoff. endTVD refers to true vertical depth at end of curve
+	public void addKickOff(double startDepth, double endTVD, double newAzimuth,
+			double newInclination) {
 		targetCurve.addKickOff(startDepth, endTVD, newAzimuth, newInclination);
 	}
-	
+
 	// get survey information into actualCurve
 	public void addSurvey(DDSurvey survey) {
 		actualCurve.addSurvey(survey);
 	}
-	
+
 	public void addSurvey(double depth, double azimuth, double inclination) {
 		DDSurvey survey = new DDSurvey(depth, azimuth, inclination);
 		actualCurve.addSurvey(survey);
 	}
-	
+
 	public void removeSurvey(DDSurvey survey) {
 		actualCurve.removeSurvey(survey);
 	}
-	
+
 	public void editSurvey(DDSurvey oldSurvey, DDSurvey newSurvey) {
 		oldSurvey = newSurvey;
 		actualCurve.rebuildCurve();
 	}
-	
-	public void editSurvey(DDSurvey survey, double depth, double azimuth, double inclination) {
+
+	public void editSurvey(DDSurvey survey, double depth, double azimuth,
+			double inclination) {
 		editSurvey(survey, new DDSurvey(depth, azimuth, inclination));
 	}
-	
+
 	// access to sets of points
 	public LinkedList<Point3D> getTargetPoints() {
 		return targetCurve.getPoints();
 	}
-	
+
 	public LinkedList<Point3D> getActualPoints() {
 		return actualCurve.getPoints();
 	}
@@ -124,12 +132,32 @@ public class DDWell {
 		this.targetWindowRight = targetWindowRight;
 	}
 
-        // give access to curves
+	// give access to curves
 	public TargetCurve getTargetCurve() {
 		return targetCurve;
 	}
 
 	public ActualCurve getActualCurve() {
 		return actualCurve;
+	}
+
+	public HashMap<String, String> getWellInfo() {
+		return wellInfo;
+	}
+
+	public void setWellInfo(HashMap<String, String> wellInfo) {
+		this.wellInfo = wellInfo;
+	}
+
+	public void setWellName(String name) {
+		wellInfo.put("Well Name", name);
+	}
+	
+	public String getWellName() {
+		return (wellInfo.containsKey("Well Name") ? wellInfo.get("Well Name") : "");
+	}
+
+	public LinkedList<Slide> getSlides() {
+		return slides;
 	}
 }
