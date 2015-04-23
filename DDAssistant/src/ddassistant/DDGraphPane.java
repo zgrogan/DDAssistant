@@ -2,6 +2,7 @@ package ddassistant;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TextField;
@@ -15,162 +16,187 @@ import javafx.scene.shape.Rectangle;
 /**
  * Created by Colee on 4/14/2015.
  */
-public class DDGraphPane extends Region{
+public class DDGraphPane extends HBox {
 
-    /*
-    * Region->VBox->HBox->GraphControls
-    *              |
-    *              ->Graph
-    *
-    * */
-    private final Label DEPTH_SLIDER_LABEL = new Label("Depth: ");
-    private final Label ZOOM_SLIDER_LABEL = new Label("Zoom: ");
-    private final Label LATITUDE_SLIDER_LABEL = new Label("Latitude: ");
-    private final Label LONGITUDE_SLIDER_LABEL = new Label("Longitude: ");
-    private static final double MAX_TEXTFIELD_WIDTH = 75;
+	/*
+	 * Region->VBox->HBox->GraphControls | ->Graph
+	 */
+	private final Label DEPTH_SLIDER_LABEL = new Label("Depth: ");
+	private final Label ZOOM_SLIDER_LABEL = new Label("Zoom: ");
+	private final Label LATITUDE_SLIDER_LABEL = new Label("Latitude: ");
+	private final Label LONGITUDE_SLIDER_LABEL = new Label("Longitude: ");
+	private static final double MAX_TEXTFIELD_WIDTH = 75;
 
-    // Depth Attributes
-    private final double DEPTH_SLIDER_MIN = 0;
-    private double DEPTH_SLIDER_MAX = 1;
-    public final static double DEPTH_SLIDER_DEFAULT = 0;
+	// Depth Attributes
+	private final double DEPTH_SLIDER_MIN = 0;
+	private double DEPTH_SLIDER_MAX = 1;
+	public final static double DEPTH_SLIDER_DEFAULT = 0;
 
-    // Zoom Attributes
-    private final double ZOOM_SLIDER_MIN = 0;
-    private final double ZOOM_SLIDER_MAX = 250;
-    public final static double ZOOM_SLIDER_DEFAULT = 30;
+	// Zoom Attributes
+	private final double ZOOM_SLIDER_MIN = 0;
+	private final double ZOOM_SLIDER_MAX = 250;
+	public final static double ZOOM_SLIDER_DEFAULT = 30;
 
-    // Latitude Attributes
-    private final double LATITUDE_SLIDER_MIN = -180;
-    private final double LATITUDE_SLIDER_MAX = 180;
-    public final static double LATITUDE_SLIDER_DEFAULT = 0;
+	// Latitude Attributes
+	private final double LATITUDE_SLIDER_MIN = -180;
+	private final double LATITUDE_SLIDER_MAX = 180;
+	public final static double LATITUDE_SLIDER_DEFAULT = 0;
 
-    // Longitude Attributes
-    private final double LONGITUDE_SLIDER_MIN = -180;
-    private final double LONGITUDE_SLIDER_MAX = 180;
-    public final static double LONGITUDE_SLIDER_DEFAULT = 0;
+	// Longitude Attributes
+	private final double LONGITUDE_SLIDER_MIN = -180;
+	private final double LONGITUDE_SLIDER_MAX = 180;
+	public final static double LONGITUDE_SLIDER_DEFAULT = 0;
 
-    private Slider depthSlider;
-    private TextField depthTextField;
+	private Slider depthSlider;
+	private TextField depthTextField;
 
-    private Slider zoomSlider;
-    private TextField zoomTextField;
+	private Slider zoomSlider;
+	private TextField zoomTextField;
 
-    private Slider latitudeSlider;
-    private TextField latitudeTextField;
+	private Slider latitudeSlider;
+	private TextField latitudeTextField;
 
-    private Slider longitudeSlider;
-    private TextField longitudeTextField;
+	private Slider longitudeSlider;
+	private TextField longitudeTextField;
 
-    private DDWindow window;
-    private DDGraph graph;
+	private DDWindow window;
+	private DDGraph graph;
 
-    private HBox hbox; // HBox used to store all of the Graph Controls
-    private VBox vbox; // VBox used to store
+	private HBox hbox; // HBox used to store all of the Graph Controls
+	private VBox vbox; // VBox used to store
+	
+	//constructors
+	public DDGraphPane(DDWindow window) {
+		this.window = window;
+		createGraphControls();
+		createListeners();
+	}
 
-    private void initGraphControls(){
-        // Depth Slider
-        depthSlider = new Slider(DEPTH_SLIDER_MIN, DEPTH_SLIDER_MAX, DEPTH_SLIDER_DEFAULT);
-        depthTextField = new TextField(Double.toString(DEPTH_SLIDER_DEFAULT));
-        depthTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
-        depthSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                depthTextField.setText("" + getDepthSliderValue());
-                graph.changeDepth(getDepthSliderValue());
-            }
-        });
-        hbox.getChildren().addAll(DEPTH_SLIDER_LABEL, depthTextField, depthSlider);
+	private void createListeners() {
+		depthSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable,
+					Number oldValue, Number newValue) {
+				depthTextField.setText("" + getDepthSliderValue());
+				graph.changeDepth(getDepthSliderValue());
+			}
+		});
 
-        // Zoom Slider
-        zoomSlider = new Slider(ZOOM_SLIDER_MIN, ZOOM_SLIDER_MAX, ZOOM_SLIDER_DEFAULT);
-        zoomTextField = new TextField(Double.toString(ZOOM_SLIDER_DEFAULT));
-        zoomTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
-        zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                zoomTextField.setText("" + getZoomSliderValue());
-                graph.changeZoom(getZoomSliderValue());
-            }
-        });
-        hbox.getChildren().addAll(ZOOM_SLIDER_LABEL, zoomTextField, zoomSlider);
+		zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable,
+					Number oldValue, Number newValue) {
+				zoomTextField.setText("" + getZoomSliderValue());
+				graph.changeZoom(getZoomSliderValue());
+			}
+		});
 
-        // Latitude Slider
-        latitudeSlider = new Slider(LATITUDE_SLIDER_MIN, LATITUDE_SLIDER_MAX, LATITUDE_SLIDER_DEFAULT);
-        latitudeTextField = new TextField(Double.toString(LATITUDE_SLIDER_DEFAULT));
-        latitudeTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
-        latitudeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                latitudeTextField.setText("" + getLatitudeSliderValue());
-                graph.changeLatitude(getLatitudeSliderValue());
-            }
-        });
-        hbox.getChildren().addAll(LATITUDE_SLIDER_LABEL, latitudeTextField, latitudeSlider);
+		latitudeSlider.valueProperty().addListener(
+				new ChangeListener<Number>() {
+					@Override
+					public void changed(
+							ObservableValue<? extends Number> observable,
+							Number oldValue, Number newValue) {
+						latitudeTextField
+								.setText("" + getLatitudeSliderValue());
+						graph.changeLatitude(getLatitudeSliderValue());
+					}
+				});
+		
+		longitudeSlider.valueProperty().addListener(
+				new ChangeListener<Number>() {
+					@Override
+					public void changed(
+							ObservableValue<? extends Number> observable,
+							Number oldValue, Number newValue) {
+						longitudeTextField.setText("" + depthSlider.getValue());
+						graph.changeLongitude(longitudeSlider.getValue());
+					}
+				});
+		
+	}
+	
+	private void createGraphControls() {
+		hbox = new HBox();
+		vbox = new VBox();
+		// Depth Slider
+		depthSlider = new Slider(DEPTH_SLIDER_MIN, DEPTH_SLIDER_MAX,
+				DEPTH_SLIDER_DEFAULT);
+		depthTextField = new TextField(Double.toString(DEPTH_SLIDER_DEFAULT));
+		depthTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
+		hbox.getChildren().addAll(DEPTH_SLIDER_LABEL, depthTextField,
+				depthSlider);
 
-        // Longitude Slider
-        longitudeSlider = new Slider(LONGITUDE_SLIDER_MIN, LONGITUDE_SLIDER_MAX, LONGITUDE_SLIDER_DEFAULT);
-        longitudeTextField = new TextField(Double.toString(LONGITUDE_SLIDER_DEFAULT));
-        longitudeTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
-       longitudeSlider.valueProperty().addListener(new ChangeListener<Number>() {
-            @Override
-            public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-                longitudeTextField.setText("" + depthSlider.getValue());
-                graph.changeLongitude(longitudeSlider.getValue());
-            }
-        });
-        hbox.getChildren().addAll(LONGITUDE_SLIDER_LABEL, longitudeTextField, longitudeSlider);
-    }
+		// Zoom Slider
+		zoomSlider = new Slider(ZOOM_SLIDER_MIN, ZOOM_SLIDER_MAX,
+				ZOOM_SLIDER_DEFAULT);
+		zoomTextField = new TextField(Double.toString(ZOOM_SLIDER_DEFAULT));
+		zoomTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
+		hbox.getChildren().addAll(ZOOM_SLIDER_LABEL, zoomTextField, zoomSlider);
 
-    public DDGraphPane(DDWindow window){
-        this.window = window;
-        graph = new DDGraph(window.getWell());
-        vbox = new VBox();
-        hbox = new HBox(graph);
-        initGraphControls();
-        vbox.getChildren().add(hbox);
-        this.getChildren().add(vbox);
-    }
+		// Latitude Slider
+		latitudeSlider = new Slider(LATITUDE_SLIDER_MIN, LATITUDE_SLIDER_MAX,
+				LATITUDE_SLIDER_DEFAULT);
+		latitudeTextField = new TextField(
+				Double.toString(LATITUDE_SLIDER_DEFAULT));
+		latitudeTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
+		hbox.getChildren().addAll(LATITUDE_SLIDER_LABEL, latitudeTextField,
+				latitudeSlider);
 
-    public void createGraph(){
-        graph = new DDGraph(window.getWell());
-        vbox.getChildren().add(graph);
-    }
+		// Longitude Slider
+		longitudeSlider = new Slider(LONGITUDE_SLIDER_MIN,
+				LONGITUDE_SLIDER_MAX, LONGITUDE_SLIDER_DEFAULT);
+		longitudeTextField = new TextField(
+				Double.toString(LONGITUDE_SLIDER_DEFAULT));
+		longitudeTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
+		hbox.getChildren().addAll(LONGITUDE_SLIDER_LABEL, longitudeTextField,
+				longitudeSlider);
+		
+		vbox.getChildren().add(hbox);
+		this.getChildren().add(vbox);
+	}
 
-    public void removeGraph(){
-        vbox.getChildren().removeAll(graph);
-        graph = null;
-    }
 
-    public double getZoomSliderValue(){
-        return zoomSlider.getValue();
-    }
+	public void createGraph() {
+		graph = new DDGraph(this, window.getWell());
+		vbox.getChildren().add(graph);
+	}
 
-    public void setZoomSliderValue(double value){
-        this.zoomSlider.setValue(value);
-    }
+	public void removeGraph() {
+		vbox.getChildren().removeAll(graph);
+		graph = null;
+	}
 
-    public double getLatitudeSliderValue(){
-        return latitudeSlider.getValue();
-    }
+	public double getZoomSliderValue() {
+		return zoomSlider.getValue();
+	}
 
-    public void setLatitudeSliderValue(double value){
-        this.latitudeSlider.setValue(value);
-    }
+	public void setZoomSliderValue(double value) {
+		this.zoomSlider.setValue(value);
+	}
 
-    public double getLongitudeSliderValue(){
-        return longitudeSlider.getValue();
-    }
+	public double getLatitudeSliderValue() {
+		return latitudeSlider.getValue();
+	}
 
-    public void setLongitudeSliderValue(double value){
-        this.longitudeSlider.setValue(value);
-    }
+	public void setLatitudeSliderValue(double value) {
+		this.latitudeSlider.setValue(value);
+	}
 
-    public double getDepthSliderValue(){
-        return depthSlider.getValue();
-    }
+	public double getLongitudeSliderValue() {
+		return longitudeSlider.getValue();
+	}
 
-    public void setDepthSliderValue(double value){
-        this.depthSlider.setValue(value);
-    }
+	public void setLongitudeSliderValue(double value) {
+		this.longitudeSlider.setValue(value);
+	}
+
+	public double getDepthSliderValue() {
+		return depthSlider.getValue();
+	}
+
+	public void setDepthSliderValue(double value) {
+		this.depthSlider.setValue(value);
+	}
 
 }

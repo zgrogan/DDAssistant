@@ -33,7 +33,7 @@ public class DDGraph extends Region {
 	private Box testBox;
 	private PerspectiveCamera camera;
 	private Group root;
-	private DDWindow window;
+	private DDGraphPane pane;
 	private DDWell well;
 
 	private Rotate latRotate;
@@ -50,10 +50,12 @@ public class DDGraph extends Region {
 	private LinkedList<org.fxyz.geometry.Point3D> points;
 	private TargetCurve targetCurve;
 	private ActualCurve actualCurve;
+	
+	private SubScene subScene;
 
 	private void createContent() {
 		root = new Group();
-		SubScene subScene = new SubScene(root, DDWindow.WIDTH, DDWindow.HEIGHT);
+		subScene = new SubScene(root, pane.getWidth(), pane.getHeight());
 		subScene.setFill(Color.ALICEBLUE);
 
 		// Create Rotation and Translate Properties
@@ -79,8 +81,9 @@ public class DDGraph extends Region {
 		this.getChildren().add(subScene);
 	}
 
-	public DDGraph(DDWell well) {
+	public DDGraph(DDGraphPane pane, DDWell well) {
 		this.well = well;
+		this.pane = pane;
 		createContent();
 		build();
 	}
@@ -102,6 +105,8 @@ public class DDGraph extends Region {
 					(float) point.getY(), (float) point.getZ()));
 		}
 		PolyLine3D line3d = new PolyLine3D(points, 1, Color.BLACK);
+		this.setWidth(pane.getWidth());
+		this.setHeight(pane.getHeight());
 		root.getChildren().addAll(line3d);
 	}
 

@@ -56,7 +56,6 @@ public class DDInformationPane extends VBox {
     *       pass and receive information to and from the DDGraphPane and DDMenuBar
     * */
     private DDWindow window;
-
     private void initInformationPane(){
 
     }
