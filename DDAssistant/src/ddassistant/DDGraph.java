@@ -56,6 +56,7 @@ public class DDGraph extends Region {
 		this.well = well;
 		this.pane = pane;
 		this.targetCurve = well.getTargetCurve();
+		this.actualCurve = well.getActualCurve();
 		createContent();
 		build();
 	}
