@@ -112,9 +112,9 @@ public class DDGraph extends Region {
 			Rotate rx = new Rotate();
 			rx.setAxis(Rotate.X_AXIS);
 			Rotate ry = new Rotate();
-			rx.setAxis(Rotate.Y_AXIS);
+			ry.setAxis(Rotate.Y_AXIS);
 			Rotate rz = new Rotate();
-			rx.setAxis(Rotate.Z_AXIS);
+			rz.setAxis(Rotate.Z_AXIS);
 			double height = targetPoints.get(i).distance(targetPoints.get(i+1));
 			depth += height/2;
 			Cylinder newCylinder = new Cylinder(holeRadius, height);
@@ -127,8 +127,8 @@ public class DDGraph extends Region {
 			newCylinder.setTranslateX(midpoint.getX());
 			newCylinder.setTranslateY(midpoint.getY());
 			newCylinder.setTranslateZ(midpoint.getZ());
-			rx.setAngle(az);
-			ry.setAngle(inc);
+			rx.setAngle(inc);
+			ry.setAngle(90-az);
 			newCylinder.getTransforms().addAll(ry, rx);
 
 			if(height > 0.01)
