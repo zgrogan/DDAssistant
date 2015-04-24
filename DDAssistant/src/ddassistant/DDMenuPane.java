@@ -241,8 +241,7 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
                         if (window.getWell() == null) {
                             System.out.println("Well does not exist.");
                         } else {
-                            DDWell well = new DDWell();
-                            well.addTargetTurn(Double.valueOf(depthTextField.getText()), Double.valueOf(lengthTextField.getText()), Double.valueOf(azimuthTextField.getText()), Double.valueOf(inclinationTextField.getText()));
+                            window.getWell().addTargetTurn(Double.valueOf(depthTextField.getText()), Double.valueOf(lengthTextField.getText()), Double.valueOf(azimuthTextField.getText()), Double.valueOf(inclinationTextField.getText()));
                             window.redrawGraph();
                         }
                         newDialog.close();

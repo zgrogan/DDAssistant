@@ -45,6 +45,7 @@ public class DDGraph extends Region {
 
 	private LinkedList<org.fxyz.geometry.Point3D> points;
 	private TargetCurve targetCurve;
+	private PolyLine3D targetCurveLine;
 	private ActualCurve actualCurve;
 
 	private SubScene subScene;
@@ -68,11 +69,6 @@ public class DDGraph extends Region {
 				new Translate(0, depthProperty, -zoomProperty));
 		camera.setFarClip(500);
 		subScene.setCamera(camera);
-		material = new PhongMaterial(Color.RED);
-
-		// Create the Box
-		testBox = new Box(5, 0.2, 0.2);
-		testBox.setMaterial(material);
 
 		this.getChildren().add(subScene);
 	}
@@ -99,10 +95,11 @@ public class DDGraph extends Region {
 			points.add(new org.fxyz.geometry.Point3D((float) point.getX(),
 					(float) point.getY(), (float) point.getZ()));
 		}
-		PolyLine3D line3d = new PolyLine3D(points, 1, Color.BLACK);
+		root.getChildren().remove(targetCurveLine);
+		targetCurveLine = new PolyLine3D(points, 1, Color.BLACK);
 		this.setWidth(pane.getWidth());
 		this.setHeight(pane.getHeight());
-		root.getChildren().addAll(line3d);
+		root.getChildren().addAll(targetCurveLine);
 	}
 
 	public void changeZoom(double depth) {
@@ -128,10 +125,8 @@ public class DDGraph extends Region {
 	public void resetCameraPosition() {
 		Point3D translateVector = DDCurveData.sphereToCart(zoomProperty,
 				270 - azimuthProperty, 180 - inclinationProperty);
-		System.out.println("TV" + translateVector);
 		Point3D depthAdjustedTranslateVector = targetCurve.getPointAt(
 				this.depthProperty).add(translateVector);
-		System.out.println("DAJ" + depthAdjustedTranslateVector);
 		camera.getTransforms().remove(0, 3);
 		camera.getTransforms().addAll(
 				new Translate(depthAdjustedTranslateVector.getX(),
@@ -139,7 +134,6 @@ public class DDGraph extends Region {
 						depthAdjustedTranslateVector.getZ()),
 				new Rotate(azimuthProperty, Rotate.Y_AXIS),
 				new Rotate(inclinationProperty - 90, Rotate.X_AXIS));
-
 	}
 
 }

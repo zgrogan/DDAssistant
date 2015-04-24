@@ -18,6 +18,14 @@ public class TestDDWell {
 		double inc = well.getTargetCurve().getInclinationAt(6000);
 		assertTrue(az > 164.99 && az < 165.01);
 		assertTrue(inc > 84.99 && inc < 85.01);
+
+		// test addTargetCurve
+		well.addTargetTurn(5000, 200, 130, 92);
+		az = well.getTargetCurve().getAzimuthAt(6000);
+		inc = well.getTargetCurve().getInclinationAt(6000);
+		assertTrue(az > 129.99 && az < 130.01);
+		assertTrue(inc > 91.99 && inc < 92.01);
+
 		
 		// test adding surveys
 		DDSurvey survey = new DDSurvey(500, 0, 5);
