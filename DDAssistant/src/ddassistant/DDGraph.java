@@ -80,6 +80,7 @@ public class DDGraph extends Region {
 		camera.setFarClip(500);
 		subScene.setCamera(camera);
 
+		targetCurveCylinders = new LinkedList<Cylinder>();
 		this.getChildren().add(subScene);
 	}
 
@@ -101,9 +102,12 @@ public class DDGraph extends Region {
 		}
 
 		// build a hole out of cylinders
-		root.getChildren().remove(targetCurveCylinders);
+		for (Cylinder one : targetCurveCylinders) {
+			root.getChildren().remove(one);
+		}
 		double depth = 0;
 		targetCurveCylinders = new LinkedList<Cylinder>();
+
 		for (int i = 0; i < targetPoints.size() - 1; i++) {
 			Rotate rx = new Rotate();
 			rx.setAxis(Rotate.X_AXIS);
