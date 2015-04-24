@@ -35,6 +35,7 @@ public class DDGraph extends Region {
 	private Group root;
 	private DDGraphPane pane;
 	private DDWell well;
+	private double holeRadius = 0.75;
 
 	private double depthProperty;
 	private double azimuthProperty;
@@ -46,9 +47,18 @@ public class DDGraph extends Region {
 	private LinkedList<org.fxyz.geometry.Point3D> points;
 	private TargetCurve targetCurve;
 	private PolyLine3D targetCurveLine;
+	private LinkedList<Cylinder> targetCurveCylinders;
 	private ActualCurve actualCurve;
 
 	private SubScene subScene;
+
+	public DDGraph(DDGraphPane pane, DDWell well) {
+		this.well = well;
+		this.pane = pane;
+		this.targetCurve = well.getTargetCurve();
+		createContent();
+		build();
+	}
 
 	private void createContent() {
 		root = new Group();
@@ -73,13 +83,6 @@ public class DDGraph extends Region {
 		this.getChildren().add(subScene);
 	}
 
-	public DDGraph(DDGraphPane pane, DDWell well) {
-		this.well = well;
-		this.pane = pane;
-		this.targetCurve = well.getTargetCurve();
-		createContent();
-		build();
-	}
 
 	public DDGraph() {
 		createContent();
@@ -90,16 +93,46 @@ public class DDGraph extends Region {
 		LinkedList<Point3D> targetPoints = well.getTargetPoints();
 		LinkedList<Point3D> actualPoints = well.getActualPoints();
 
+		// build a line
 		points = new LinkedList<org.fxyz.geometry.Point3D>();
 		for (Point3D point : targetPoints) {
 			points.add(new org.fxyz.geometry.Point3D((float) point.getX(),
 					(float) point.getY(), (float) point.getZ()));
 		}
-		root.getChildren().remove(targetCurveLine);
-		targetCurveLine = new PolyLine3D(points, 1, Color.BLACK);
+
+		// build a hole out of cylinders
+		root.getChildren().remove(targetCurveCylinders);
+		double depth = 0;
+		targetCurveCylinders = new LinkedList<Cylinder>();
+		for (int i = 0; i < targetPoints.size() - 1; i++) {
+			Rotate rx = new Rotate();
+			rx.setAxis(Rotate.X_AXIS);
+			Rotate ry = new Rotate();
+			rx.setAxis(Rotate.Y_AXIS);
+			Rotate rz = new Rotate();
+			rx.setAxis(Rotate.Z_AXIS);
+			double height = targetPoints.get(i).distance(targetPoints.get(i+1));
+			depth += height/2;
+			Cylinder newCylinder = new Cylinder(holeRadius, height);
+			double angle = targetPoints.get(i).angle(targetPoints.get(i + 1));
+			Point3D axis = targetPoints.get(i+1).subtract(targetPoints.get(i));
+			Point3D midpoint = targetPoints.get(i).midpoint(targetPoints.get(i+1));
+			double az = targetCurve.getAzimuthAt(depth);
+			double inc = targetCurve.getInclinationAt(depth);
+			depth += height/2;
+			newCylinder.setTranslateX(midpoint.getX());
+			newCylinder.setTranslateY(midpoint.getY());
+			newCylinder.setTranslateZ(midpoint.getZ());
+			rx.setAngle(az);
+			ry.setAngle(inc);
+			newCylinder.getTransforms().addAll(ry, rx);
+
+			if(height > 0.01)
+				targetCurveCylinders.add(newCylinder);
+		}
 		this.setWidth(pane.getWidth());
 		this.setHeight(pane.getHeight());
-		root.getChildren().addAll(targetCurveLine);
+		root.getChildren().addAll(targetCurveCylinders);
 	}
 
 	public void changeZoom(double depth) {

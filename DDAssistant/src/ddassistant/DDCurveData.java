@@ -217,4 +217,9 @@ public class DDCurveData {
 		}
 		return ret;
 	}
+
+	public double getDepthAt(Point3D point) {
+
+		return 0;
+	}
 }

@@ -29,7 +29,7 @@ public class DDGraphPane extends HBox {
 
 	// Depth Attributes
 	private final double DEPTH_SLIDER_MIN = 0;
-	private double depthSliderMax = 10000;
+	private double depthSliderMax = 1000;
 	public final static double DEPTH_SLIDER_DEFAULT = 0;
 
 	// Zoom Attributes
