@@ -23,13 +23,13 @@ public class DDGraphPane extends HBox {
 	 */
 	private final Label DEPTH_SLIDER_LABEL = new Label("Depth: ");
 	private final Label ZOOM_SLIDER_LABEL = new Label("Zoom: ");
-	private final Label LATITUDE_SLIDER_LABEL = new Label("Latitude: ");
-	private final Label LONGITUDE_SLIDER_LABEL = new Label("Longitude: ");
+	private final Label azimuth_SLIDER_LABEL = new Label("azimuth: ");
+	private final Label INCLINATION_SLIDER_LABEL = new Label("Longitude: ");
 	private static final double MAX_TEXTFIELD_WIDTH = 75;
 
 	// Depth Attributes
 	private final double DEPTH_SLIDER_MIN = 0;
-	private double depthSliderMax = 50;
+	private double depthSliderMax = 10000;
 	public final static double DEPTH_SLIDER_DEFAULT = 0;
 
 	// Zoom Attributes
@@ -37,7 +37,7 @@ public class DDGraphPane extends HBox {
 	private final double ZOOM_SLIDER_MAX = 250;
 	public final static double ZOOM_SLIDER_DEFAULT = 30;
 
-	// Latitude Attributes
+	// azimuth Attributes
 	private final double AZIMUTH_SLIDER_MIN = -180;
 	private final double AZIMUTH_SLIDER_MAX = 180;
 	public final static double AZIMUTH_SLIDER_DEFAULT = 0;
@@ -53,11 +53,11 @@ public class DDGraphPane extends HBox {
 	private Slider zoomSlider;
 	private TextField zoomTextField;
 
-	private Slider latitudeSlider;
-	private TextField latitudeTextField;
+	private Slider azimuthSlider;
+	private TextField azimuthTextField;
 
-	private Slider longitudeSlider;
-	private TextField longitudeTextField;
+	private Slider inclinationSlider;
+	private TextField inclinationTextField;
 
 	private DDWindow window;
 	private DDGraph graph;
@@ -91,26 +91,26 @@ public class DDGraphPane extends HBox {
 			}
 		});
 
-		latitudeSlider.valueProperty().addListener(
+		azimuthSlider.valueProperty().addListener(
 				new ChangeListener<Number>() {
 					@Override
 					public void changed(
 							ObservableValue<? extends Number> observable,
 							Number oldValue, Number newValue) {
-						latitudeTextField
-								.setText("" + getLatitudeSliderValue());
-						graph.changeLatitude(getLatitudeSliderValue());
+						azimuthTextField
+								.setText("" + getazimuthSliderValue());
+						graph.changeAzimuth(getazimuthSliderValue());
 					}
 				});
 		
-		longitudeSlider.valueProperty().addListener(
+		inclinationSlider.valueProperty().addListener(
 				new ChangeListener<Number>() {
 					@Override
 					public void changed(
 							ObservableValue<? extends Number> observable,
 							Number oldValue, Number newValue) {
-						longitudeTextField.setText("" + depthSlider.getValue());
-						graph.changeLongitude(longitudeSlider.getValue());
+						inclinationTextField.setText("" + depthSlider.getValue());
+						graph.changeInclination(inclinationSlider.getValue());
 					}
 				});
 		
@@ -134,23 +134,23 @@ public class DDGraphPane extends HBox {
 		zoomTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
 		hbox.getChildren().addAll(ZOOM_SLIDER_LABEL, zoomTextField, zoomSlider);
 
-		// Latitude Slider
-		latitudeSlider = new Slider(AZIMUTH_SLIDER_MIN, AZIMUTH_SLIDER_MAX,
-				LATITUDE_SLIDER_DEFAULT);
-		latitudeTextField = new TextField(
-				Double.toString(LATITUDE_SLIDER_DEFAULT));
-		latitudeTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
-		hbox.getChildren().addAll(LATITUDE_SLIDER_LABEL, latitudeTextField,
-				latitudeSlider);
+		// azimuth Slider
+		azimuthSlider = new Slider(AZIMUTH_SLIDER_MIN, AZIMUTH_SLIDER_MAX,
+				AZIMUTH_SLIDER_DEFAULT);
+		azimuthTextField = new TextField(
+				Double.toString(AZIMUTH_SLIDER_DEFAULT));
+		azimuthTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
+		hbox.getChildren().addAll(azimuth_SLIDER_LABEL, azimuthTextField,
+				azimuthSlider);
 
 		// Longitude Slider
-		longitudeSlider = new Slider(INCLINATION_SLIDER_MIN,
-				INCLINATION_SLIDER_MAX, LONGITUDE_SLIDER_DEFAULT);
-		longitudeTextField = new TextField(
-				Double.toString(LONGITUDE_SLIDER_DEFAULT));
-		longitudeTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
-		hbox.getChildren().addAll(LONGITUDE_SLIDER_LABEL, longitudeTextField,
-				longitudeSlider);
+		inclinationSlider = new Slider(INCLINATION_SLIDER_MIN,
+				INCLINATION_SLIDER_MAX, INCLINATION_SLIDER_DEFAULT);
+		inclinationTextField = new TextField(
+				Double.toString(INCLINATION_SLIDER_DEFAULT));
+		inclinationTextField.setMaxWidth(MAX_TEXTFIELD_WIDTH);
+		hbox.getChildren().addAll(INCLINATION_SLIDER_LABEL, inclinationTextField,
+				inclinationSlider);
 		
 		vbox.getChildren().add(hbox);
 		this.getChildren().add(vbox);
@@ -175,20 +175,20 @@ public class DDGraphPane extends HBox {
 		this.zoomSlider.setValue(value);
 	}
 
-	public double getLatitudeSliderValue() {
-		return latitudeSlider.getValue();
+	public double getazimuthSliderValue() {
+		return azimuthSlider.getValue();
 	}
 
-	public void setLatitudeSliderValue(double value) {
-		this.latitudeSlider.setValue(value);
+	public void setazimuthSliderValue(double value) {
+		this.azimuthSlider.setValue(value);
 	}
 
 	public double getLongitudeSliderValue() {
-		return longitudeSlider.getValue();
+		return inclinationSlider.getValue();
 	}
 
 	public void setLongitudeSliderValue(double value) {
-		this.longitudeSlider.setValue(value);
+		this.inclinationSlider.setValue(value);
 	}
 
 	public double getDepthSliderValue() {
@@ -199,4 +199,7 @@ public class DDGraphPane extends HBox {
 		this.depthSlider.setValue(value);
 	}
 
+	public void redraw() {
+		graph.build();
+	}
 }

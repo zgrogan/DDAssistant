@@ -36,10 +36,6 @@ public class DDGraph extends Region {
 	private DDGraphPane pane;
 	private DDWell well;
 
-	private Rotate latRotate;
-	private Rotate longRotate;
-	private Translate zoomTranslate;
-
 	private double depthProperty;
 	private double azimuthProperty;
 	private double inclinationProperty;
@@ -100,8 +96,6 @@ public class DDGraph extends Region {
 
 		points = new LinkedList<org.fxyz.geometry.Point3D>();
 		for (Point3D point : targetPoints) {
-			System.out.println("Adding: X: " + (float) point.getX() + ", Y: "
-					+ (float) point.getY() + ", Z: " + (float) point.getZ());
 			points.add(new org.fxyz.geometry.Point3D((float) point.getX(),
 					(float) point.getY(), (float) point.getZ()));
 		}
@@ -116,12 +110,12 @@ public class DDGraph extends Region {
 		resetCameraPosition();
 	}
 
-	public void changeazimuth(double azimuth) {
+	public void changeAzimuth(double azimuth) {
 		this.azimuthProperty = azimuth;
 		resetCameraPosition();
 	}
 
-	public void changeinclination(double inclination) {
+	public void changeInclination(double inclination) {
 		this.inclinationProperty = inclination;
 		resetCameraPosition();
 	}
@@ -133,18 +127,18 @@ public class DDGraph extends Region {
 
 	public void resetCameraPosition() {
 		Point3D translateVector = DDCurveData.sphereToCart(zoomProperty,
-				inclinationProperty, azimuthProperty);
+				270 - azimuthProperty, 180 - inclinationProperty);
 		System.out.println("TV" + translateVector);
 		Point3D depthAdjustedTranslateVector = targetCurve.getPointAt(
 				this.depthProperty).add(translateVector);
 		System.out.println("DAJ" + depthAdjustedTranslateVector);
 		camera.getTransforms().remove(0, 3);
 		camera.getTransforms().addAll(
-				new Rotate(-azimuthProperty, Rotate.Y_AXIS),
-				new Rotate(-inclinationProperty, Rotate.X_AXIS),
 				new Translate(depthAdjustedTranslateVector.getX(),
 						depthAdjustedTranslateVector.getY(),
-						depthAdjustedTranslateVector.getZ()));
+						depthAdjustedTranslateVector.getZ()),
+				new Rotate(azimuthProperty, Rotate.Y_AXIS),
+				new Rotate(inclinationProperty - 90, Rotate.X_AXIS));
 
 	}
 

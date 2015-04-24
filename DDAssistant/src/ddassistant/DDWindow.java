@@ -191,6 +191,10 @@ public class DDWindow extends Application {
         ddGraphPane.removeGraph();
     }
 
+    public void redrawGraph() {
+        ddGraphPane.redraw();
+    }
+
     public DDWell getWell(){
         return well;
     }

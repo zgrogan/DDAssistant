@@ -59,10 +59,10 @@ public class DDCurveData {
 
 	// returns the point in the curve at the specified depth
 	public Point3D getPointAt(double depth) {
-		// return values, default to end of curve
-		double x = points.getLast().getX();
-		double y = points.getLast().getY();
-		double z = points.getLast().getZ();
+		// return values, default to top of curve
+		double x = points.getFirst().getX();
+		double y = points.getFirst().getY();
+		double z = points.getFirst().getZ();
 
 		// we will trace the curve, adding each segment until we surpass our
 		// target.

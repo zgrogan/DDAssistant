@@ -45,6 +45,7 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
     private Menu fileMenu;
     private Menu viewMenu;
     private Menu expandMenu;
+    private Menu targetMenu;
     private Menu helpMenu;
 
     private Menu graphViewMenu;
@@ -66,6 +67,10 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
 
     private DDWindow window;
 
+    public DDMenuPane(DDWindow window){
+        this.window = window;
+        InitMainBar();
+    }
 
     private void InitFileMenu(){
         fileMenu = new Menu(string_FileMenu);
@@ -78,9 +83,9 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
                 Label azimuthLabel = new Label("Azimuth: ");
                 Label inclinationLabel = new Label("Inclination: ");
 
-                TextField depthTextField = new TextField();
-                TextField azimuthTextField = new TextField();
-                TextField inclinationTextField = new TextField();
+                final TextField depthTextField = new TextField();
+                final TextField azimuthTextField = new TextField();
+                final TextField inclinationTextField = new TextField();
 
                 Button createButton = new Button("Create");
 
@@ -104,7 +109,7 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
                 newRoot.getChildren().add(borderPane);
                 Scene newScene = new Scene(newRoot, 400, 200);
 
-                Stage newDialog = new Stage();
+                final Stage newDialog = new Stage();
                 newDialog.setScene(newScene);
                 newDialog.setTitle("New");
                 newDialog.show();
@@ -112,17 +117,17 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        if(window.getWell() != null){
+                        if (window.getWell() != null) {
                             System.out.println("Well is not empty.");
                             window.removeWell();
                             DDWell well = new DDWell();
                             well.createTargetCurve(Double.valueOf(depthTextField.getText()));
                             window.setWell(well);
-                        }else if(window.getWell() == null){
+                        } else if (window.getWell() == null) {
                             DDWell well = new DDWell();
                             well.createTargetCurve(Double.valueOf(depthTextField.getText()));
                             window.setWell(well);
-                        }else{
+                        } else {
                             System.out.println("Error!");
                         }
                         newDialog.close();
@@ -182,13 +187,73 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
         InitViewMenu();
         InitExpandMenu();
         InitHelpMenu();
+        InitTaragetMenu();
         this.getMenus().addAll(fileMenu, viewMenu, expandMenu, helpMenu);
     }
 
-    public DDMenuPane(DDWindow window){
-        this.window = window;
-        InitMainBar();
+    private void InitTaragetMenu() {
+        targetMenu = new Menu("Target");
+
+        MenuItem addCurveMenuItem = new MenuItem("Add a Turn");
+        addCurveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent event) {
+                Label depthLabel = new Label("Depth: ");
+                Label curveLengthLabel = new Label("Curve Length: ");
+                Label azimuthLabel = new Label("New Azimuth: ");
+                Label inclinationLabel = new Label("New Inclination: ");
+
+                final TextField depthTextField = new TextField();
+                final TextField lengthTextField = new TextField();
+                final TextField azimuthTextField = new TextField();
+                final TextField inclinationTextField = new TextField();
+
+                Button createButton = new Button("Create");
+
+                Button cancelButton = new Button("Cancel");
+
+                VBox labelBox = new VBox();
+                VBox textFieldBox = new VBox();
+                VBox buttonBox = new VBox();
+
+                buttonBox.getChildren().addAll(createButton, cancelButton);
+
+                labelBox.getChildren().addAll(depthLabel, curveLengthLabel, azimuthLabel, inclinationLabel);
+                textFieldBox.getChildren().addAll(depthTextField, lengthTextField, azimuthTextField, inclinationTextField);
+
+                BorderPane borderPane = new BorderPane();
+                borderPane.setLeft(labelBox);
+                borderPane.setCenter(textFieldBox);
+                borderPane.setBottom(buttonBox);
+
+                Group newRoot = new Group();
+                newRoot.getChildren().add(borderPane);
+                Scene newScene = new Scene(newRoot, 400, 200);
+
+                final Stage newDialog = new Stage();
+                newDialog.setScene(newScene);
+                newDialog.setTitle("New");
+                newDialog.show();
+
+                createButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        if (window.getWell() == null) {
+                            System.out.println("Well does not exist.");
+                        } else {
+                            DDWell well = new DDWell();
+                            well.addTargetTurn(Double.valueOf(depthTextField.getText()), Double.valueOf(lengthTextField.getText()), Double.valueOf(azimuthTextField.getText()), Double.valueOf(inclinationTextField.getText()));
+                            window.redrawGraph();
+                        }
+                        newDialog.close();
+                    }
+                });
+            }
+        });
+
+        fileMenu.getItems().addAll(addCurveMenuItem);
     }
+
 
     @Override
     public void handle(ActionEvent e){
