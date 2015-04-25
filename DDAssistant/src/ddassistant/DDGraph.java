@@ -2,38 +2,28 @@ package ddassistant;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
-import javafx.collections.ListChangeListener;
-import javafx.event.EventHandler;
-import javafx.geometry.Bounds;
 import javafx.geometry.Point3D;
-import javafx.scene.Camera;
 import javafx.scene.Group;
 import javafx.scene.PerspectiveCamera;
 import javafx.scene.SubScene;
-import javafx.scene.input.MouseDragEvent;
-import javafx.scene.input.MouseEvent;
-import javafx.scene.layout.Region;
+import javafx.scene.control.SplitPane;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 import javafx.scene.paint.PhongMaterial;
 import javafx.scene.shape.*;
 import javafx.scene.transform.Rotate;
-import javafx.scene.transform.Transform;
 import javafx.scene.transform.Translate;
 
-import org.fxyz.shapes.composites.PolyLine3D;
-
-import java.util.EventListener;
 import java.util.LinkedList;
-import java.util.List;
 
 /**
  * Created by Colee on 4/18/2015.
  */
-public class DDGraph extends Region {
+public class DDGraph extends StackPane {
 	private Box testBox;
 	private PerspectiveCamera camera;
 	private Group root;
-	private DDGraphPane pane;
+	private SplitPane parent;
 	private DDWell well;
 	private double holeRadius = 0.75;
 
@@ -42,29 +32,49 @@ public class DDGraph extends Region {
 	private double inclinationProperty;
 	private double zoomProperty;
 
-	private PhongMaterial material;
+	private PhongMaterial redMaterial;
+	private PhongMaterial greenMaterial;
+	private PhongMaterial grayMaterial;
 
-	private LinkedList<org.fxyz.geometry.Point3D> points;
 	private TargetCurve targetCurve;
-	private PolyLine3D targetCurveLine;
 	private LinkedList<Cylinder> targetCurveCylinders;
 	private ActualCurve actualCurve;
+	private ProjectedCurve projectedCurve;
 
 	private SubScene subScene;
 
-	public DDGraph(DDGraphPane pane, DDWell well) {
+	public DDGraph(SplitPane parent, DDWell well) {
 		this.well = well;
-		this.pane = pane;
+		this.parent = parent;
+		parent.widthProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+
+			}
+		});
 		this.targetCurve = well.getTargetCurve();
 		this.actualCurve = well.getActualCurve();
+		this.projectedCurve = well.getProjectedCurve();
 		createContent();
 		build();
 	}
 
+	public DDGraph() {
+		createContent();
+	}
+
 	private void createContent() {
 		root = new Group();
-		subScene = new SubScene(root, pane.getWidth(), pane.getHeight());
+		subScene = new SubScene(root, parent.getWidth(), parent.getHeight());
 		subScene.setFill(Color.ALICEBLUE);
+
+		// set materials
+		redMaterial = new PhongMaterial();
+		redMaterial.setDiffuseColor(Color.RED);
+		greenMaterial = new PhongMaterial();
+		greenMaterial.setDiffuseColor(Color.GREEN);
+		grayMaterial = new PhongMaterial();
+		grayMaterial.setDiffuseColor(Color.GRAY);
 
 		// Create Rotation and Translate Properties
 		azimuthProperty = DDGraphPane.AZIMUTH_SLIDER_DEFAULT;
@@ -74,10 +84,7 @@ public class DDGraph extends Region {
 
 		// Setup and Add Camera
 		camera = new PerspectiveCamera(true);
-		camera.getTransforms().addAll(
-				new Rotate(azimuthProperty, Rotate.Y_AXIS),
-				new Rotate(inclinationProperty, Rotate.X_AXIS),
-				new Translate(0, depthProperty, -zoomProperty));
+		camera.getTransforms().addAll(new Translate(0, 0, -zoomProperty));
 		camera.setFarClip(500);
 		subScene.setCamera(camera);
 
@@ -85,60 +92,64 @@ public class DDGraph extends Region {
 		this.getChildren().add(subScene);
 	}
 
-
-	public DDGraph() {
-		createContent();
-	}
-
-	// Displays the content from DDWell onto the graph
-	public void build() {
-		LinkedList<Point3D> targetPoints = well.getTargetPoints();
-		LinkedList<Point3D> actualPoints = well.getActualPoints();
-
-		// build a line
-		points = new LinkedList<org.fxyz.geometry.Point3D>();
-		for (Point3D point : targetPoints) {
-			points.add(new org.fxyz.geometry.Point3D((float) point.getX(),
-					(float) point.getY(), (float) point.getZ()));
-		}
-
-		// build a hole out of cylinders
-		for (Cylinder one : targetCurveCylinders) {
-			root.getChildren().remove(one);
-		}
+	private void drawCurve(DDCurveData curve, PhongMaterial material) {
+		LinkedList<Point3D> points = well.getTargetPoints();
+		LinkedList<Point3D> curvePoints = curve.getPoints();
+		LinkedList<Cylinder> curveCylinders = new LinkedList<Cylinder>();
 		double depth = 0;
-		targetCurveCylinders = new LinkedList<Cylinder>();
-
-		for (int i = 0; i < targetPoints.size() - 1; i++) {
+		for (int i = 0; i < curve.getPoints().size() - 1; i++) {
 			Rotate rx = new Rotate();
 			rx.setAxis(Rotate.X_AXIS);
 			Rotate ry = new Rotate();
 			ry.setAxis(Rotate.Y_AXIS);
 			Rotate rz = new Rotate();
 			rz.setAxis(Rotate.Z_AXIS);
-			double height = targetPoints.get(i).distance(targetPoints.get(i+1));
-			depth += height/2;
+			double height = curvePoints.get(i).distance(curvePoints.get(i + 1));
+			depth += height / 2;
 			Cylinder newCylinder = new Cylinder(holeRadius, height);
-			double angle = targetPoints.get(i).angle(targetPoints.get(i + 1));
-			Point3D axis = targetPoints.get(i+1).subtract(targetPoints.get(i));
-			Point3D midpoint = targetPoints.get(i).midpoint(targetPoints.get(i+1));
-			double az = targetCurve.getAzimuthAt(depth);
-			double inc = targetCurve.getInclinationAt(depth);
-			depth += height/2;
+			Point3D midpoint = curvePoints.get(i).midpoint(curvePoints.get(i + 1));
+			double az = curve.getAzimuthAt(depth);
+			double inc = curve.getInclinationAt(depth);
+			depth += height / 2;
 			newCylinder.setTranslateX(midpoint.getX());
 			newCylinder.setTranslateY(midpoint.getY());
 			newCylinder.setTranslateZ(midpoint.getZ());
 			rx.setAngle(inc);
-			ry.setAngle(90-az);
+			ry.setAngle(90 - az);
 			newCylinder.getTransforms().addAll(ry, rx);
+			newCylinder.setMaterial(material);
 
-			if(height > 0.01)
-				targetCurveCylinders.add(newCylinder);
+			if (height > 0.01)
+				curveCylinders.add(newCylinder);
 		}
-		this.setWidth(pane.getWidth());
-		this.setHeight(pane.getHeight());
-		root.getChildren().addAll(targetCurveCylinders);
+
+		root.getChildren().addAll(curveCylinders);
+
 	}
+
+
+	private void drawWindow(TargetCurve targetCurve, PhongMaterial greenMaterial) {
+	}
+
+	// Displays the content from DDWell onto the graph
+	public void build() {
+		// get rid of objects in the scene
+		for (Object o : root.getChildren()) {
+			if (o != subScene)
+				root.getChildren().remove(o);
+		}
+		drawCurve(targetCurve, greenMaterial);
+		drawWindow(targetCurve, greenMaterial);
+		drawCurve(actualCurve, redMaterial);
+		drawCurve(projectedCurve, grayMaterial);
+
+		// build a hole out of cylinders
+		for (Cylinder one : targetCurveCylinders) {
+			root.getChildren().remove(one);
+		}
+		double depth = 0;
+	}
+
 
 	public void changeZoom(double depth) {
 		this.zoomProperty = depth;

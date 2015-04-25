@@ -14,6 +14,8 @@ public class DDWell {
 	// curves
 	private TargetCurve targetCurve;
 	private final ActualCurve actualCurve;
+	private ProjectedCurve projectedCurve;
+	private double projectionLength = 100;
 
 	// target window
 	private double targetWindowHi;
@@ -28,6 +30,7 @@ public class DDWell {
 	public DDWell() {
 		targetCurve = new TargetCurve();
 		actualCurve = new ActualCurve();
+		projectedCurve = new ProjectedCurve(actualCurve, projectionLength);
 		slides = new LinkedList<Slide>();
 		wellInfo = new HashMap<String, String>();
 	}
@@ -160,4 +163,9 @@ public class DDWell {
 	public synchronized LinkedList<Slide> getSlides() {
 		return slides;
 	}
+
+	public ProjectedCurve getProjectedCurve() {
+		return this.projectedCurve;
+	}
+
 }
