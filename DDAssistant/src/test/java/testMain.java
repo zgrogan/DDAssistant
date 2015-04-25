@@ -4,16 +4,18 @@ import static org.junit.Assert.assertTrue;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+import org.junit.Test;
+
 import ddassistant.DDSurvey;
 import ddassistant.DDWell;
 import ddassistant.connection;
 import ddassistant.newFile;
 import ddassistant.pullFile;
 
-public class testMain extends connection {
+public class testMain{
 	private static String[] returned;
-	public static void main (String[] args)throws SQLException
-	{
+	@Test
+	public void testSaveFile () throws SQLException {
 		ArrayList<String> info = new ArrayList<String>(100);
 		newFile next = new newFile();
 		pullFile next2 = new pullFile();
@@ -51,7 +53,6 @@ public class testMain extends connection {
 		
 		
 	}
-	
+}
 	
 
-}
