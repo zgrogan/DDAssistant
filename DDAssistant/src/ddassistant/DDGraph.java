@@ -48,29 +48,29 @@ public class DDGraph extends StackPane {
 
 	private SubScene subScene;
 
-	public DDGraph(SplitPane parent, DDWell well) {
-		this.well = well;
-		this.parent = parent;
-		parent.widthProperty().addListener(new ChangeListener<Number>() {
-			@Override
-			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+	private double width, height;
 
-			}
-		});
+	public DDGraph(double width, double height) {
+		this.width = width;
+		this.height = height;
+		createContent();
+	}
+
+	public void setWell(DDWell well){
+		this.well = well;
 		this.targetCurve = well.getTargetCurve();
 		this.actualCurve = well.getActualCurve();
-//		this.projectedCurve = well.getProjectedCurve();
-		createContent();
 		build();
 	}
 
-	public DDGraph() {
-		createContent();
+	public void updateSize(double width, double height){
+		subScene.setWidth(width);
+		subScene.setHeight(height);
 	}
 
 	private void createContent() {
 		root = new Group();
-		subScene = new SubScene(root, parent.getWidth(), parent.getHeight());
+		subScene = new SubScene(root, width, height);
 		subScene.setFill(Color.ALICEBLUE);
 
 		// set materials
@@ -82,12 +82,6 @@ public class DDGraph extends StackPane {
 		greenMaterial.setDiffuseMap(new Image("lib/greenTransparent.png"));
 		grayMaterial = new PhongMaterial();
 		grayMaterial.setDiffuseColor(Color.GRAY);
-
-		// Create Rotation and Translate Properties
-		azimuthProperty = DDGraphPane.AZIMUTH_SLIDER_DEFAULT;
-		inclinationProperty = DDGraphPane.INCLINATION_SLIDER_DEFAULT;
-		zoomProperty = DDGraphPane.ZOOM_SLIDER_DEFAULT;
-		depthProperty = DDGraphPane.DEPTH_SLIDER_DEFAULT;
 
 		// Setup and Add Camera
 		camera = new PerspectiveCamera(true);
