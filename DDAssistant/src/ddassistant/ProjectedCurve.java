@@ -43,7 +43,7 @@ public class ProjectedCurve extends TargetCurve {
         points.add(sphereToCart(projectionLength, azimuth, inclination));
         if(actualCurve.getPoints().size() > 0)
         totalCurve.setPoints(actualCurve.getPoints());
-        totalCurve.getPoints().addAll(points);
+        //totalCurve.getPoints().addAll(points);
     }
 
     @Override
