@@ -1,10 +1,9 @@
 package ddassistant;
 
+import javafx.geometry.Point3D;
+
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
-
-import javafx.geometry.Point3D;
 
 @SuppressWarnings("restriction")
 public class DDWell {
@@ -18,10 +17,10 @@ public class DDWell {
 	private double projectionLength = 100;
 
 	// target window
-	private double targetWindowHi;
-	private double targetWindowLow;
-	private double targetWindowLeft;
-	private double targetWindowRight;
+	private double targetWindowHi = 20;
+	private double targetWindowLow = 20;
+	private double targetWindowLeft = 20;
+	private double targetWindowRight = 20;
 
 	// slides
 	private LinkedList<Slide> slides;

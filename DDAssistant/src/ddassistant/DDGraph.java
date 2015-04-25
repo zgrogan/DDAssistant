@@ -78,7 +78,7 @@ public class DDGraph extends StackPane {
 		redMaterial.setSpecularColor(Color.WHITE);
 		redMaterial.setDiffuseMap(new Image("lib/drillPipeTexture.png"));
 		greenMaterial = new PhongMaterial();
-		greenMaterial.setSpecularColor(Color.WHITE);
+		greenMaterial.setSpecularColor(Color.GREEN);
 		greenMaterial.setDiffuseMap(new Image("lib/greenTransparent.png"));
 		grayMaterial = new PhongMaterial();
 		grayMaterial.setDiffuseColor(Color.GRAY);
@@ -92,7 +92,7 @@ public class DDGraph extends StackPane {
 		// Setup and Add Camera
 		camera = new PerspectiveCamera(true);
 		camera.getTransforms().addAll(new Rotate(), new Rotate(), new Translate(0, 0, -zoomProperty));
-		camera.setFarClip(500);
+		camera.setFarClip(3000);
 		subScene.setCamera(camera);
 
 		this.getChildren().add(subScene);
@@ -102,6 +102,10 @@ public class DDGraph extends StackPane {
 		LinkedList<Point3D> points = well.getTargetPoints();
 		LinkedList<Point3D> curvePoints = curve.getPoints();
 		LinkedList<Box> curveBoxes = new LinkedList<Box>();
+		double hi = well.getTargetWindowHi();
+		double low = well.getTargetWindowLow();
+		double left = well.getTargetWindowLeft();
+		double right = well.getTargetWindowRight();
 		double depth = 0;
 		for (int i = 0; i < curve.getPoints().size() - 1; i++) {
 			Rotate rx = new Rotate();
@@ -112,7 +116,7 @@ public class DDGraph extends StackPane {
 			rz.setAxis(Rotate.Z_AXIS);
 			double height = curvePoints.get(i).distance(curvePoints.get(i + 1));
 			depth += height / 2;
-			Box newBox = new Box(20, height, 20);
+			Box newBox = new Box(hi + low, height, left + right);
 			Point3D midpoint = curvePoints.get(i).midpoint(curvePoints.get(i + 1));
 			double az = curve.getAzimuthAt(depth);
 			double inc = curve.getInclinationAt(depth);
@@ -138,12 +142,15 @@ public class DDGraph extends StackPane {
 		LinkedList<Cylinder> curveCylinders = new LinkedList<Cylinder>();
 		double depth = 0;
 		for (int i = 0; i < curve.getPoints().size() - 1; i++) {
+			// set up axes
 			Rotate rx = new Rotate();
 			rx.setAxis(Rotate.X_AXIS);
 			Rotate ry = new Rotate();
 			ry.setAxis(Rotate.Y_AXIS);
 			Rotate rz = new Rotate();
 			rz.setAxis(Rotate.Z_AXIS);
+
+			// calculate dimensions and location of curve segment
 			double height = curvePoints.get(i).distance(curvePoints.get(i + 1));
 			depth += height / 2;
 			Cylinder newCylinder = new Cylinder(holeRadius, height);
@@ -151,6 +158,8 @@ public class DDGraph extends StackPane {
 			double az = curve.getAzimuthAt(depth);
 			double inc = curve.getInclinationAt(depth);
 			depth += height / 2;
+
+			// move and rotate the object in place
 			newCylinder.setTranslateX(midpoint.getX());
 			newCylinder.setTranslateY(midpoint.getY());
 			newCylinder.setTranslateZ(midpoint.getZ());
@@ -162,29 +171,31 @@ public class DDGraph extends StackPane {
 			if (height > 0.01)
 				curveCylinders.add(newCylinder);
 		}
-
 		root.getChildren().addAll(curveCylinders);
-
 	}
 
 
 
 	// Displays the content from DDWell onto the graph
 	public void build() {
-		// get rid of objects in the scene
+		// get rid of any objects in the scene
 		LinkedList<Object> toRemove = new LinkedList<>();
 		for (Object o : root.getChildren()) {
 			if (o != subScene)
 				toRemove.add(o);
 		}
 		root.getChildren().removeAll(toRemove);
+
+		// draw specified objects
 		if(drawTargetWIndow)
-		drawWindow(targetCurve, greenMaterial);
+		  drawWindow(targetCurve, greenMaterial);
 		if(drawTargetCurve)
-		drawCurve(targetCurve, redMaterial);
+		  drawCurve(targetCurve, greenMaterial);
 		if(drawActualCurve)
 		if (!actualCurve.getPoints().isEmpty());
-		    drawCurve(actualCurve, redMaterial);
+		  drawCurve(actualCurve, redMaterial);
+		if(drawProjectedCurve)
+			drawCurve(projectedCurve, grayMaterial);
 //		if (!projectedCurve.getPoints().isEmpty());
 //		    drawCurve(projectedCurve, grayMaterial);
 

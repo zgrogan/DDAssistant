@@ -1,11 +1,12 @@
 package test.java;
 
-import static org.junit.Assert.*;
-import org.junit.Test;
-import javafx.geometry.Point3D;
 import ddassistant.ActualCurve;
 import ddassistant.DDCurveData;
 import ddassistant.TargetCurve;
+import javafx.geometry.Point3D;
+import org.junit.Test;
+
+import static org.junit.Assert.*;
 
 @SuppressWarnings("restriction")
 public class CurveTest {
