@@ -29,6 +29,7 @@ public class DDWell {
 	public DDWell() {
 		targetCurve = new TargetCurve();
 		actualCurve = new ActualCurve();
+		actualCurve.addSurvey(0,0,0);
 		projectedCurve = new ProjectedCurve(actualCurve, projectionLength);
 		slides = new LinkedList<Slide>();
 		wellInfo = new HashMap<String, String>();

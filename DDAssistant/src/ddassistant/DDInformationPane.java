@@ -22,7 +22,6 @@ public class DDInformationPane extends Region {
     private final String STRING_SURVEY_TAB = "Survey";
     private final String STRING_SLIDE_ROTATION_TAB = "Slide/Rotation";
     private final String STRING_PROJECTION_TAB = "Projection";
-    private final String STRING_BHA_TAB = "BHA";
     private final String STRING_WELL_DATA_TAB = "Well Data";
 
 
@@ -86,11 +85,7 @@ public class DDInformationPane extends Region {
         infoTabPane.setMinWidth(window.WIDTH);
 
         // Create Survey Tab
-        surveyTab = new Tab();
-        surveyTab.setText(STRING_SURVEY_TAB);
-        surveyTab.setClosable(false);
-        surveyTable = new TableView<String>();
-        surveyTab.setContent(surveyTable);
+        surveyTab = new SurveyTab(well);
         infoTabPane.getTabs().add(surveyTab);
 
         // Create Slide/Rotation Tab
@@ -104,12 +99,6 @@ public class DDInformationPane extends Region {
         projectionTab.setText(STRING_PROJECTION_TAB);
         projectionTab.setClosable(false);
         infoTabPane.getTabs().add(projectionTab);
-
-        // Create BHA Tab
-        BHATab = new Tab();
-        BHATab.setText(STRING_BHA_TAB);
-        BHATab.setClosable(false);
-        infoTabPane.getTabs().add(BHATab);
 
         // Create Well Data Tab
         wellDataTab = new Tab();

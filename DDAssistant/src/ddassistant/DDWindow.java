@@ -53,13 +53,14 @@ public class DDWindow extends Application {
     private DDWell well = null;
 
     public void start(Stage primaryStage){
+        this.well = new DDWell();
         setScreenSize();
         borderPane = new BorderPane();
 
         ddMenuPane = new DDMenuPane(this);
         borderPane.setTop(ddMenuPane);
 
-        ddMainPane = new DDMainPane();
+        ddMainPane = new DDMainPane(well);
         borderPane.setCenter(ddMainPane);
 
         scene = new Scene(borderPane, WIDTH, HEIGHT);

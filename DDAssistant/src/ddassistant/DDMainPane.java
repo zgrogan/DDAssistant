@@ -21,8 +21,8 @@ public class DDMainPane extends StackPane {
 
     private double width, height;
 
-
-    public DDMainPane(){
+    public DDMainPane(DDWell well){
+        this.well = well;
         splitPane = new SplitPane();
         ddGraphPane = new DDGraphPane();
         ddInfoPane = new DDInformationPane(well);

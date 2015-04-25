@@ -1,12 +1,19 @@
 package ddassistant;
 
 
+import javafx.beans.property.DoubleProperty;
+import javafx.beans.property.SimpleDoubleProperty;
+
 // used to store individual survey entries
 public class DDSurvey implements Comparable<DDSurvey> {
 	public double depth;
 	public double inclination;
 	public double azimuth;
-	
+
+	public DoubleProperty azimuthProperty()  { return new SimpleDoubleProperty(azimuth); }
+	public DoubleProperty depthProperty()  { return new SimpleDoubleProperty(depth); }
+	public DoubleProperty inclinationProperty()  { return new SimpleDoubleProperty(inclination); }
+
 	public DDSurvey(){
 		super();
 	}

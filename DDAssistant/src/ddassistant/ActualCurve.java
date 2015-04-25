@@ -43,6 +43,8 @@ public class ActualCurve extends DDCurveData {
 					surveys.add(survey);
 			double curveLength = survey.depth - startDepth;
 			this.addTurn(startDepth, curveLength, survey.azimuth, survey.inclination);
+		} else if (Math.abs(survey.depth - startDepth) <= 0.001){
+			surveys.add(survey);
 		} else {
 			surveys.add(survey);
 			rebuildCurve();
