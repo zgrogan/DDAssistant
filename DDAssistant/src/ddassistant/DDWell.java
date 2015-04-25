@@ -167,5 +167,12 @@ public class DDWell {
 	public ProjectedCurve getProjectedCurve() {
 		return this.projectedCurve;
 	}
+	
+	@Override
+	public String toString() {
+		String ret = "";
+		ret += getWellName() + targetCurve + actualCurve + "\n";
+		return ret;
+	}
 
 }
