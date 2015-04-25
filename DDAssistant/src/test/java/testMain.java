@@ -21,7 +21,7 @@ public class testMain{
 		pullFile next2 = new pullFile();
 		next.save();
 		try {
-			info.addAll(next2.load());
+	//		info.addAll(next2.load());
 			for(int i=0;i<info.size();i++){
 			    System.out.println(info.get(i));
 			} 

@@ -38,7 +38,7 @@ public class DDGraphPane extends StackPane {
         ddGraphControls = new DDGraphControls(ddGraph, well);
 
         splitPane.setOrientation(Orientation.HORIZONTAL);
-        splitPane.setDividerPosition(0, 0.1);
+        splitPane.setDividerPosition(0,0.25);
 
 
         scrollPane.setContent(ddGraphControls);
@@ -65,5 +65,9 @@ public class DDGraphPane extends StackPane {
         this.well = well;
         ddGraph.setWell(well);
         ddGraphControls.setWell(well);
+    }
+
+    public void redrawGraph() {
+        ddGraphControls.redraw();
     }
 }

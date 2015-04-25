@@ -103,7 +103,7 @@ public class DDWindow extends Application {
     *
     * */
     public void redrawGraph() {
-        //ddGraphControls.redraw();
+        ddMainPane.redrawGraph();
     }
 
     /*

@@ -173,7 +173,7 @@ public class DDGraph extends StackPane {
 	// Displays the content from DDWell onto the graph
 	public void build() {
 		// get rid of any objects in the scene
-		LinkedList<Object> toRemove = new LinkedList<>();
+		LinkedList<Object> toRemove = new LinkedList<Object>();
 		for (Object o : root.getChildren()) {
 			if (o != subScene)
 				toRemove.add(o);
@@ -230,4 +230,8 @@ public class DDGraph extends StackPane {
 				new Rotate(inclinationProperty - 90, Rotate.X_AXIS));
 	}
 
+	public void redraw() {
+		this.build();
+		resetCameraPosition();
+	}
 }

@@ -48,4 +48,8 @@ public class DDMainPane extends StackPane {
     public void removeWell(){
         this.well = null;
     }
+
+    public void redrawGraph() {
+        ddGraphPane.redrawGraph();
+    }
 }

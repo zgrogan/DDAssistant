@@ -123,13 +123,12 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
                             DDWell well = new DDWell();
                             well.createTargetCurve(Double.valueOf(depthTextField.getText()));
                             window.setWell(well);
-                        } else if (window.getWell() == null) {
+                        } else {
                             DDWell well = new DDWell();
                             well.createTargetCurve(Double.valueOf(depthTextField.getText()));
                             window.setWell(well);
-                        } else {
-                            System.out.println("Error!");
                         }
+                        window.redrawGraph();
                         newDialog.close();
                     }
                 });
