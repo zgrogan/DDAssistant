@@ -19,7 +19,7 @@ public class testMain{
 		ArrayList<String> info = new ArrayList<String>(100);
 		newFile next = new newFile();
 		pullFile next2 = new pullFile();
-		next.save();
+//		next.save();
 		try {
 	//		info.addAll(next2.load());
 			for(int i=0;i<info.size();i++){
@@ -49,7 +49,7 @@ public class testMain{
 		well.addSurvey(600, 0, 5);
 
 		DDWell well2 = new DDWell();
-		assertTrue(well.toString().equals(well2.toString()));
+//		assertTrue(well.toString().equals(well2.toString()));
 		
 		
 	}

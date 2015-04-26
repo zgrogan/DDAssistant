@@ -60,7 +60,7 @@ public class DDWindow extends Application {
         ddMenuPane = new DDMenuPane(this);
         borderPane.setTop(ddMenuPane);
 
-        ddMainPane = new DDMainPane(well);
+        ddMainPane = new DDMainPane(well, this);
         borderPane.setCenter(ddMainPane);
 
         scene = new Scene(borderPane, WIDTH, HEIGHT);

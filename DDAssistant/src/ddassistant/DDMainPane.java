@@ -15,17 +15,19 @@ public class DDMainPane extends StackPane {
 
     // Private Fields
     private DDWell well;
+    private DDWindow window;
     private DDInformationPane ddInfoPane;
     private DDGraphPane ddGraphPane;
     private SplitPane splitPane;
 
     private double width, height;
 
-    public DDMainPane(DDWell well){
+    public DDMainPane(DDWell well, DDWindow window){
+        this.window = window;
         this.well = well;
         splitPane = new SplitPane();
         ddGraphPane = new DDGraphPane();
-        ddInfoPane = new DDInformationPane(well);
+        ddInfoPane = new DDInformationPane(well, window);
 
         splitPane.setOrientation(Orientation.VERTICAL);
         splitPane.setDividerPosition(0, 0.70);
@@ -43,6 +45,7 @@ public class DDMainPane extends StackPane {
     public void setWell(DDWell well){
         this.well = well;
         ddGraphPane.setWell(well);
+        ddInfoPane.setWell(well);
     }
 
     public void removeWell(){

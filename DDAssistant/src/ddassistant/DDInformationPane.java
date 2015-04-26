@@ -34,7 +34,7 @@ public class DDInformationPane extends Region {
     *
     * NEEDS EXPLANATION!
     * */
-    private Tab surveyTab;
+    private SurveyTab surveyTab;
 
     /*
     * Tab slide_rotationTab
@@ -85,7 +85,7 @@ public class DDInformationPane extends Region {
         infoTabPane.setMinWidth(window.WIDTH);
 
         // Create Survey Tab
-        surveyTab = new SurveyTab(well);
+        surveyTab = new SurveyTab(well, window);
         infoTabPane.getTabs().add(surveyTab);
 
         // Create Slide/Rotation Tab
@@ -109,8 +109,14 @@ public class DDInformationPane extends Region {
         this.getChildren().addAll(infoToolBar, infoTabPane);
     }
 
-    public DDInformationPane(DDWell well){
+    public DDInformationPane(DDWell well, DDWindow window){
+        this.window = window;
         this.well = well;
         initInformationPane();
+    }
+
+    public void setWell(DDWell well) {
+        this.well = well;
+        surveyTab.setWell(well);
     }
 }

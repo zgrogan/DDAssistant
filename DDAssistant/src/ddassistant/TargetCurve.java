@@ -15,6 +15,7 @@ public class TargetCurve extends DDCurveData {
 
 	public TargetCurve() {
 		super();
+		this.getPoints().add(ZERO);
 	}
 
 	public TargetCurve(DDCurveData ddCurveData) {

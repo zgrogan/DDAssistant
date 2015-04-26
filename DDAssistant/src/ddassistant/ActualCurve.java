@@ -38,12 +38,12 @@ public class ActualCurve extends DDCurveData {
 	// adds a survey and rebuilds curve if necessary
 	public void addSurvey(DDSurvey survey) {
 		double startDepth = getDepth();
-		if (survey.depth > startDepth) {
+		if (survey.getDepth() > startDepth) {
 			if(!surveys.contains(survey))
 					surveys.add(survey);
-			double curveLength = survey.depth - startDepth;
-			this.addTurn(startDepth, curveLength, survey.azimuth, survey.inclination);
-		} else if (Math.abs(survey.depth - startDepth) <= 0.001){
+			double curveLength = survey.getDepth() - startDepth;
+			this.addTurn(startDepth, curveLength, survey.getAzimuth(), survey.getInclination());
+		} else if (Math.abs(survey.getDepth() - startDepth) <= 0.001){
 			surveys.add(survey);
 		} else {
 			surveys.add(survey);
