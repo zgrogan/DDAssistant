@@ -226,10 +226,10 @@ public class DDTargetMenu extends Menu {
                 Label leftTargetLabel = new Label("Left Target Window: ");
                 Label rightTargetLabel = new Label("Right Target Window: ");
 
-                TextField highTargetTextField = new TextField();
-                TextField lowTargetTextField = new TextField();
-                TextField leftTargetTextField = new TextField();
-                TextField rightTargetTextField = new TextField();
+                final TextField highTargetTextField = new TextField();
+                final TextField lowTargetTextField = new TextField();
+                final TextField leftTargetTextField = new TextField();
+                final TextField rightTargetTextField = new TextField();
 
                 Button createButton = new Button("Create");
                 Button cancelButton = new Button("Cancel");
@@ -246,7 +246,7 @@ public class DDTargetMenu extends Menu {
                 Group root = new Group();
                 root.getChildren().add(mainPane);
                 Scene scene = new Scene(root, mainPane.getMinWidth(), mainPane.getMinHeight());
-                Stage stage = new Stage();
+                final Stage stage = new Stage();
                 stage.setScene(scene);
                 stage.show();
 
