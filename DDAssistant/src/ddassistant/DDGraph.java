@@ -38,7 +38,7 @@ public class DDGraph extends StackPane {
 	private PhongMaterial greenMaterial;
 	private PhongMaterial grayMaterial;
 
-	private boolean drawTargetCurve = false;
+	private boolean drawTargetCurve = true;
 	private boolean drawTargetWIndow = true;
 	private boolean drawActualCurve = true;
 	private boolean drawProjectedCurve = false;

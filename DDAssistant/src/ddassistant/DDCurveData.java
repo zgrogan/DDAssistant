@@ -75,7 +75,7 @@ public class DDCurveData {
 				loopLength += getDistance(points.get(i), points.get(i + 1));
 
 				// we found the segment to cut
-				if (loopLength >= depth) {
+				if (loopLength >= depth - .001) {
 					// avoid divide by zero
 					double fractionToCut = 1;
 					if (loopLength != tempLength) {
@@ -166,7 +166,6 @@ public class DDCurveData {
 	// guarantees no more than 1 degree edge in curve.
 	public void addTurn(double startDepth, double curveLength, double newAzimuth,
 			double newInclination) {
-		LinkedList<Point3D> newPoints = new LinkedList<Point3D>();
 		double startAzimuth = this.getAzimuthAt(startDepth);
 		double startInclination = this.getInclinationAt(startDepth);
 		Point3D startVector = DDCurveData.sphereToCart(1, startAzimuth,
@@ -177,13 +176,23 @@ public class DDCurveData {
 		if (Double.isNaN(angle))
 			angle = 0;
 
+		if (startInclination > 90) {
+			System.out.println("Start Debug");
+			startInclination = this.getInclinationAt(startDepth);
+		}
+
+
 		// keep all points before startDepth, discard the rest
+		LinkedList<Point3D> newPoints = new LinkedList<Point3D>();
 		for (Point3D point : this.getCurveAbove(startDepth).getPoints()) {
 			newPoints.add(point);
 		}
 		if(!newPoints.getLast().equals(this.getPointAt(startDepth)))
 			newPoints.add(this.getPointAt(startDepth));
+		while((newPoints.getLast() != newPoints.getFirst()) && newPoints.getLast().equals(ZERO))
+			newPoints.removeLast();
 		this.setPoints(newPoints);
+		System.out.println(points);
 		
 		// if we were going straight down, startAzimuth is not a good number
 		if (startInclination < 0.001)
@@ -204,6 +213,8 @@ public class DDCurveData {
 		// now add a final point along the desired line to get it headed that way.
 		Point3D finalPoint = this.getPoints().getLast().add(sphereToCart(0.01, newAzimuth, newInclination));
 		this.getPoints().add(finalPoint);
+		while((this.getPoints().getLast() != this.getPoints().getFirst()) && this.getPoints().getLast().equals(ZERO))
+			newPoints.removeLast();
 	}
 
 	public void setPoints(LinkedList<Point3D> points) {
