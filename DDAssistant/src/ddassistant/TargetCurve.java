@@ -17,6 +17,7 @@ public class TargetCurve extends DDCurveData {
 
 	public void set(TargetCurve newCurve) {
 		this.points = newCurve.getPoints();
+		this.targetDepth = newCurve.targetDepth;
 	}
 
 	public TargetCurve() {
