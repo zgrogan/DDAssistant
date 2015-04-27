@@ -176,12 +176,6 @@ public class DDCurveData {
 		if (Double.isNaN(angle))
 			angle = 0;
 
-		if (startInclination > 90) {
-			System.out.println("Start Debug");
-			startInclination = this.getInclinationAt(startDepth);
-		}
-
-
 		// keep all points before startDepth, discard the rest
 		LinkedList<Point3D> newPoints = new LinkedList<Point3D>();
 		for (Point3D point : this.getCurveAbove(startDepth).getPoints()) {
