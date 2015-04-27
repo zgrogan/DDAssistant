@@ -8,10 +8,7 @@ import javafx.scene.Group;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 /**
@@ -48,6 +45,8 @@ public class DDTargetMenu extends Menu {
                 Button cancelButton = new Button("Cancel");
 
                 GridPane mainPane = new GridPane();
+                mainPane.setHgap(5);
+                mainPane.setVgap(5);
                 mainPane.setPadding(new Insets(10));
                 mainPane.addRow(0, depthLabel, depthTextField, createButton, cancelButton);
 
@@ -112,6 +111,8 @@ public class DDTargetMenu extends Menu {
                 Button cancelButton = new Button("Cancel");
 
                 GridPane mainPane = new GridPane();
+                mainPane.setHgap(5);
+                mainPane.setVgap(5);
                 mainPane.setPadding(new Insets(10));
                 mainPane.addRow(0, startDepthLabel, startDepthTextField, createButton);
                 mainPane.addRow(1, endTVDLabel, endTVDTextField, cancelButton);
@@ -119,14 +120,14 @@ public class DDTargetMenu extends Menu {
                 mainPane.addRow(3, newInclinationLabel, newInclinationTextField);
 
 
-                Group newRoot = new Group();
-                newRoot.getChildren().add(mainPane);
-                Scene newScene = new Scene(newRoot, mainPane.getMinWidth(), mainPane.getMinHeight());
+                Group root = new Group();
+                root.getChildren().add(mainPane);
+                Scene scene = new Scene(root, mainPane.getMinWidth(), mainPane.getMinHeight());
 
-                final Stage newDialog = new Stage();
-                newDialog.setScene(newScene);
-                newDialog.setTitle("Create KickOff");
-                newDialog.show();
+                final Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("Create KickOff");
+                stage.show();
 
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -138,14 +139,14 @@ public class DDTargetMenu extends Menu {
                                 Double.valueOf(newInclinationTextField.getText())
                         );
                         window.redrawGraph();
-                        newDialog.close();
+                        stage.close();
                     }
                 });
 
                 cancelButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        newDialog.close();
+                        stage.close();
                     }
                 });
 
@@ -168,24 +169,25 @@ public class DDTargetMenu extends Menu {
                 final TextField inclinationTextField = new TextField();
 
                 Button createButton = new Button("Create");
-
                 Button cancelButton = new Button("Cancel");
 
                 GridPane mainPane = new GridPane();
+                mainPane.setHgap(5);
+                mainPane.setVgap(5);
                 mainPane.setPadding(new Insets(10));
                 mainPane.addRow(0, depthLabel, depthTextField, createButton);
                 mainPane.addRow(1, curveLengthLabel, lengthTextField, cancelButton);
                 mainPane.addRow(2, azimuthLabel, azimuthTextField);
                 mainPane.addRow(3, inclinationLabel, inclinationTextField);
 
-                Group newRoot = new Group();
-                newRoot.getChildren().add(mainPane);
-                Scene newScene = new Scene(newRoot, mainPane.getMinWidth(), mainPane.getMinHeight());
+                Group root = new Group();
+                root.getChildren().add(mainPane);
+                Scene scene = new Scene(root, mainPane.getMinWidth(), mainPane.getMinHeight());
 
-                final Stage newDialog = new Stage();
-                newDialog.setScene(newScene);
-                newDialog.setTitle("Add Turn");
-                newDialog.show();
+                final Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.setTitle("Add Turn");
+                stage.show();
 
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
@@ -193,10 +195,22 @@ public class DDTargetMenu extends Menu {
                         if (window.getWell() == null) {
                             System.out.println("Well does not exist.");
                         } else {
-                            window.getWell().addTargetTurn(Double.valueOf(depthTextField.getText()), Double.valueOf(lengthTextField.getText()), Double.valueOf(azimuthTextField.getText()), Double.valueOf(inclinationTextField.getText()));
+                            window.getWell().addTargetTurn(
+                                    Double.valueOf(depthTextField.getText()),
+                                    Double.valueOf(lengthTextField.getText()),
+                                    Double.valueOf(azimuthTextField.getText()),
+                                    Double.valueOf(inclinationTextField.getText())
+                            );
                             window.redrawGraph();
                         }
-                        newDialog.close();
+                        stage.close();
+                    }
+                });
+
+                cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        stage.close();
                     }
                 });
             }
@@ -207,7 +221,52 @@ public class DDTargetMenu extends Menu {
         targetWindowMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Label highTargetLabel = new Label("High Target Window: ");
+                Label lowTargetLabel = new Label("Low Target Window: ");
+                Label leftTargetLabel = new Label("Left Target Window: ");
+                Label rightTargetLabel = new Label("Right Target Window: ");
 
+                TextField highTargetTextField = new TextField();
+                TextField lowTargetTextField = new TextField();
+                TextField leftTargetTextField = new TextField();
+                TextField rightTargetTextField = new TextField();
+
+                Button createButton = new Button("Create");
+                Button cancelButton = new Button("Cancel");
+
+                GridPane mainPane = new GridPane();
+                mainPane.setHgap(5);
+                mainPane.setVgap(5);
+                mainPane.setPadding(new Insets(10));
+                mainPane.addRow(0, highTargetLabel, highTargetTextField, createButton);
+                mainPane.addRow(1, lowTargetLabel, lowTargetTextField, cancelButton);
+                mainPane.addRow(2, leftTargetLabel, leftTargetTextField);
+                mainPane.addRow(3, rightTargetLabel, rightTargetTextField);
+
+                Group root = new Group();
+                root.getChildren().add(mainPane);
+                Scene scene = new Scene(root, mainPane.getMinWidth(), mainPane.getMinHeight());
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.show();
+
+                createButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        well.setTargetWindowHi(Double.valueOf(highTargetTextField.getText()));
+                        well.setTargetWindowLow(Double.valueOf(lowTargetTextField.getText()));
+                        well.setTargetWindowLeft(Double.valueOf(leftTargetTextField.getText()));
+                        well.setTargetWindowRight(Double.valueOf(rightTargetTextField.getText()));
+                        window.redrawGraph();
+                    }
+                });
+
+                cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        stage.close();
+                    }
+                });
             }
         });
 
