@@ -5,7 +5,7 @@ public class Connection
 {
 	public java.sql.Connection connection = null;
 	public Statement statement =  null;
-	
+	public PreparedStatement pstmt = null;
 	public void mysql()
 	{
 		try{
@@ -16,7 +16,8 @@ public class Connection
 
 			connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/odb86mysqldb", "root", "Marines343");
 
-
+			pstmt = connection
+					.prepareStatement("INSERT INTO EMPLOYEE (emp) VALUES(?)");
 			statement = connection.createStatement();
 
 

@@ -1,8 +1,8 @@
 package ddassistant;
 
-import java.util.LinkedList;
-
 import javafx.geometry.Point3D;
+
+import java.util.LinkedList;
 
 // DDCurveData represents a set of points in 3D space of
 // of a directional well.
@@ -13,8 +13,8 @@ public class DDCurveData {
 	// unit vectors for cardinal directions
 	public static final Point3D NORTH = new Point3D(1,0,0);
 	public static final Point3D SOUTH = new Point3D(-1,0,0);
-	public static final Point3D EAST = new Point3D(0,0,-1);
-	public static final Point3D WEST = new Point3D(0,0,1);
+	public static final Point3D EAST = new Point3D(0,0,1);
+	public static final Point3D WEST = new Point3D(0,0,-1);
 	public static final Point3D DOWN = new Point3D(0,1,0);
 	public static final Point3D UP = new Point3D(0,-1,0);
 	public static final Point3D ZERO = new Point3D(0,0,0);
