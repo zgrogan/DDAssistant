@@ -186,7 +186,6 @@ public class DDCurveData {
 		while((newPoints.getLast() != newPoints.getFirst()) && newPoints.getLast().equals(ZERO))
 			newPoints.removeLast();
 		this.setPoints(newPoints);
-		System.out.println(points);
 		
 		// if we were going straight down, startAzimuth is not a good number
 		if (startInclination < 0.001)
@@ -223,8 +222,16 @@ public class DDCurveData {
 		return ret;
 	}
 
-	public double getDepthAt(Point3D point) {
+	// get unit vector normal to a curve at a specified depth
+	public static Point3D getUpVector(DDCurveData curve, double depth) {
+		double azimuth = curve.getAzimuthAt(depth);
+		double inclination = curve.getInclinationAt(depth);
+		return getUnitVector(azimuth, inclination + 90);
+	}
 
-		return 0;
+	public static Point3D getLeftVector(DDCurveData curve, double depth) {
+		double azimuth = curve.getAzimuthAt(depth) - 90;
+		double inclination = 90;
+		return getUnitVector(azimuth, inclination);
 	}
 }

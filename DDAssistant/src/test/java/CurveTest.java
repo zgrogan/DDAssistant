@@ -95,6 +95,7 @@ public class CurveTest {
 		ac.addSurvey(1000, 150, 5);
 		double az = ac.getAzimuthAt(750);
 		double inc = ac.getInclinationAt(750);
+		System.out.println(az);
 		assertTrue(az > 149.999 && az < 150.001);
 		assertTrue(inc > 4.999 && inc < 5.001);
 

@@ -1,5 +1,6 @@
 package ddassistant;
 
+import java.text.DecimalFormat;
 import java.util.LinkedList;
 
 import javafx.geometry.Point3D;
@@ -95,5 +96,42 @@ public class TargetCurve extends DDCurveData {
 
 	public double getLandingDepth() {
 		return landingDepth;
+	}
+
+	// return string representing drilling accuracy example: 25.0 HI / 15.0 Left
+	public String getHLLR(ActualCurve actualCurve, Double depth) {
+		Point3D actualPoint = actualCurve.getPointAt(depth);
+		Point3D upVector = getUpVector(actualCurve, depth);
+		Point3D leftVector = getLeftVector(actualCurve, depth);
+		System.out.println("up: " + upVector);
+		System.out.println("left: " + leftVector);
+		double actualAzimuth = actualCurve.getAzimuthAt(depth);
+		double actualInclinaton = actualCurve.getInclinationAt(depth);
+		// find closest point on target curve to actualPoint
+		double distanceChange = 2;
+		double distance = 0;
+		Point3D targetPoint = getPointAt(depth);
+		int count = 0;
+		while(Math.abs(distanceChange) > 0.1 && count < 1000) {
+			count++;
+			targetPoint = this.getPointAt(depth);
+			distance = actualPoint.distance(targetPoint);
+			depth += distanceChange;
+			if (distance - targetPoint.distance(actualPoint) >= 0)
+				distanceChange /= -2;
+		}
+
+
+		// calculate hi/low left/right based on given points and angles
+		Point3D differenceVector = targetPoint.subtract(actualPoint);
+		double hi = distance * Math.cos(differenceVector.angle(upVector));
+		double left = distance * Math.cos(differenceVector.angle(leftVector));
+
+		DecimalFormat df = new DecimalFormat();
+		df.setMaximumFractionDigits(2);
+		String hllr = df.format(Math.abs(hi)) + ((hi < 0) ? " Lo" : " Hi / ");
+		hllr += df.format(Math.abs(left)) + ((left < 0) ? " Right" : " Left");
+
+		return hllr;
 	}
 }

@@ -1,5 +1,8 @@
 package ddassistant;
 
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.EventHandler;
@@ -9,6 +12,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.event.ActionEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.util.Callback;
+import javafx.scene.control.TableColumn.*;
 
 public class SurveyTab extends Tab {
 
@@ -39,10 +44,22 @@ public class SurveyTab extends Tab {
         TableColumn<DDSurvey,Double> depthCol = new TableColumn<DDSurvey,Double>("Depth");
         TableColumn<DDSurvey,Double> azimuthCol = new TableColumn<DDSurvey,Double>("Azimuth");
         TableColumn<DDSurvey,Double> inclinationCol = new TableColumn<DDSurvey,Double>("Inclination");
-        depthCol.setCellValueFactory(new PropertyValueFactory<DDSurvey,Double>("depth"));
+        TableColumn<DDSurvey,String> hllrCol = new TableColumn<>("HiLow / LeftRight");
+        depthCol.setCellValueFactory(new PropertyValueFactory<DDSurvey, Double>("depth"));
         azimuthCol.setCellValueFactory(new PropertyValueFactory<DDSurvey,Double>("azimuth"));
-        inclinationCol.setCellValueFactory(new PropertyValueFactory<DDSurvey,Double>("inclination"));
-        tableView.getColumns().setAll(depthCol, azimuthCol, inclinationCol);
+        inclinationCol.setCellValueFactory(new PropertyValueFactory<DDSurvey, Double>("inclination"));
+        hllrCol.setCellValueFactory(new Callback<CellDataFeatures<DDSurvey, String>, ObservableValue<String>>() {
+
+            @Override
+            public ObservableValue<String> call(CellDataFeatures<DDSurvey, String> param) {
+                return new ReadOnlyStringWrapper(well.getHLLR(param.getValue().getDepth()));
+            }
+        });
+        tableView.getColumns().setAll(depthCol, azimuthCol, inclinationCol, hllrCol);
+
+        depthCol.setEditable(true);
+        azimuthCol.setEditable(true);
+        inclinationCol.setEditable(true);
 
         // textFields to add new survey
         final TextField addDepth = new TextField();
@@ -62,8 +79,8 @@ public class SurveyTab extends Tab {
             @Override
             public void handle(ActionEvent e) {
                 well.addSurvey(new DDSurvey(Double.parseDouble(addDepth.getText()),
-                                            Double.parseDouble(addAzimuth.getText()),
-                                            Double.parseDouble(addInclination.getText())));
+                        Double.parseDouble(addAzimuth.getText()),
+                        Double.parseDouble(addInclination.getText())));
                 window.redrawGraph();
                 initSurveyTab();
             }

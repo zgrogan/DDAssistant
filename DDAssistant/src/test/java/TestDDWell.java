@@ -28,9 +28,9 @@ public class TestDDWell {
 
 		
 		// test adding surveys
-		DDSurvey survey = new DDSurvey(500, 0, 5);
+		DDSurvey survey = new DDSurvey(500, -45, 5);
 		well.addSurvey(survey);
-		well.addSurvey(600, 0, 5);
+		well.addSurvey(600, -45, 5);
 		assertTrue(well.getSurveys().size() == 3);
 		assertTrue(well.getActualCurve().getInclinationAt(550) > 0 && well.getActualCurve().getInclinationAt(550) < 5);
 	}

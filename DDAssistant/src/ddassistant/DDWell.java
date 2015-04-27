@@ -1,9 +1,13 @@
 package ddassistant;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.geometry.Point3D;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.Map;
 
 @SuppressWarnings("restriction")
 public class DDWell {
@@ -175,4 +179,23 @@ public class DDWell {
 		return ret;
 	}
 
+	public ArrayList<ArrayList<String>> getSurveyTable() {
+		ArrayList<ArrayList<String>> surveyTable = new ArrayList<>();
+		for(DDSurvey survey : getSurveys()) {
+			ArrayList<String> row = new ArrayList<>();
+			row.add(Double.toString(survey.getDepth()));
+			row.add(Double.toString(survey.getAzimuth()));
+			row.add(Double.toString(survey.getInclination()));
+			row.add(Double.toString(targetCurve.getAzimuthAt(survey.getDepth())));
+			row.add(Double.toString(targetCurve.getInclinationAt(survey.getDepth())));
+			row.add(getHLLR(survey.getDepth()));
+			surveyTable.add(row);
+		}
+		return surveyTable;
+	}
+
+	public String getHLLR(double depth) {
+		String hllr = targetCurve.getHLLR(actualCurve, depth);
+		return hllr;
+	}
 }
