@@ -38,13 +38,12 @@ public class DDGraphPane extends StackPane {
         ddGraphControls = new DDGraphControls(ddGraph, well);
 
         splitPane.setOrientation(Orientation.HORIZONTAL);
-        splitPane.setDividerPosition(0,0.25);
+        splitPane.setDividerPosition(0,0.20);
 
 
         scrollPane.setContent(ddGraphControls);
         scrollGraph.setContent(ddGraph);
         splitPane.getItems().addAll(scrollPane, scrollGraph);
-        //ddGraph.setPrefWidth(Screen.getPrimary().getVisualBounds().getWidth() * scrollGraph.getWidth());
 
         splitPane.getDividers().get(0).positionProperty().addListener(new ChangeListener<Number>() {
             @Override
@@ -59,6 +58,15 @@ public class DDGraphPane extends StackPane {
     public void updateSize(double height){
         HEIGHT = height;
         ddGraph.updateSize(WIDTH, HEIGHT);
+    }
+
+    public void setAzimuth(double azimuth){
+        ddGraphControls.setAzimuthSliderValue(azimuth);
+        ddGraphControls.redraw();
+    }
+
+    public void setInclination(double inclination){
+        ddGraphControls.setInclinationSliderValue(inclination);
     }
 
     public void setWell(DDWell well){

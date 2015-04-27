@@ -5,8 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.VBox;
+import javafx.scene.layout.*;
 import javafx.stage.Stage;
 
 import javax.xml.soap.Text;
@@ -16,7 +15,7 @@ import javax.xml.soap.Text;
  */
 
 
-public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
+public class DDMenuPane extends MenuBar{
 
     private final String string_FileMenu = "File";
     private final String string_ViewMenu = "View";
@@ -37,42 +36,54 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
 
     private MenuBar menuBar;
 
+    private DDFileMenu fileMenu;
+    private DDViewMenu viewMenu;
+    private DDTargetMenu targetMenu;
     /*
     * Menu fileMenu
     *
     *
     * */
-    private Menu fileMenu;
-    private Menu viewMenu;
+    //private Menu fileMenu;
+    //private Menu viewMenu;
     private Menu expandMenu;
-    private Menu targetMenu;
+    //private Menu targetMenu;
     private Menu helpMenu;
 
+    // Sub View Menu
     private Menu graphViewMenu;
     private Menu graphDirectionMenu;
 
+    // Sub GraphViewMenu
     private RadioMenuItem targetMenuItem;
     private RadioMenuItem actualMenuItem;
     private RadioMenuItem targetWindowMenuItem;
     private RadioMenuItem projectionMenuItem;
 
+    // Sub Graph Direction Menu
     private MenuItem hiLowMenuItem;
     private MenuItem leftRightMenuItem;
+
 
     private MenuItem graphMenu;
     private MenuItem infoMenu;
     private MenuItem defaultMenu;
 
+    // Sub File
     private MenuItem newMenuItem;
 
     private DDWindow window;
 
-    public DDMenuPane(DDWindow window){
-        this.window = window;
-        InitMainBar();
+    public void setWell(){
+
     }
 
-    private void InitFileMenu(){
+    public DDMenuPane(DDWindow window){
+        this.window = window;
+        initMenuBar();
+    }
+
+    /*private void InitFileMenu(){
         fileMenu = new Menu(string_FileMenu);
 
         newMenuItem = new MenuItem(string_NewMenuItem);
@@ -91,23 +102,22 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
 
                 Button cancelButton = new Button("Cancel");
 
-                VBox labelBox = new VBox();
-                VBox textFieldBox = new VBox();
-                VBox buttonBox = new VBox();
 
+
+                HBox firstRowBox = new HBox();
+                firstRowBox.getChildren().addAll(depthLabel, depthTextField);
+                firstRowBox.setSpacing(5);
+                HBox buttonBox = new HBox();
                 buttonBox.getChildren().addAll(createButton, cancelButton);
+                buttonBox.setSpacing(5);
 
-                labelBox.getChildren().addAll(depthLabel, azimuthLabel, inclinationLabel);
-                textFieldBox.getChildren().addAll(depthTextField, azimuthTextField, inclinationTextField);
-
-                BorderPane borderPane = new BorderPane();
-                borderPane.setLeft(labelBox);
-                borderPane.setCenter(textFieldBox);
-                borderPane.setBottom(buttonBox);
+                VBox mainBox = new VBox();
+                mainBox.getChildren().addAll(firstRowBox, buttonBox);
+                mainBox.setSpacing(5);
 
                 Group newRoot = new Group();
-                newRoot.getChildren().add(borderPane);
-                Scene newScene = new Scene(newRoot, 400, 200);
+                newRoot.getChildren().add(mainBox);
+                Scene newScene = new Scene(newRoot, 100, 100);
 
                 final Stage newDialog = new Stage();
                 newDialog.setScene(newScene);
@@ -117,6 +127,12 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
+                        if(depthTextField.getText() == null){
+                            javafx.scene.text.Text textBoxIsNull = new javafx.scene.text.Text();
+                            textBoxIsNull.setText("Depth should be a positive number.");
+                            mainBox.getChildren().add(textBoxIsNull);
+                            newDialog.close();
+                        }
                         if (window.getWell() != null) {
                             System.out.println("Well is not empty.");
                             window.removeWell();
@@ -136,16 +152,16 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
         });
 
         fileMenu.getItems().addAll(newMenuItem);
-    }
+    }*/
 
-    private void InitViewMenu(){
+    /*private void InitViewMenu(){
         viewMenu = new Menu(string_ViewMenu);
 
         InitGraphViewMenu();
         InitGraphDirectionMenu();
 
         viewMenu.getItems().addAll(graphViewMenu, graphDirectionMenu);
-    }
+    }*/
 
     private void InitGraphViewMenu(){
         graphViewMenu = new Menu(string_GraphViewMenu);
@@ -181,16 +197,17 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
         helpMenu = new Menu(string_HelpMenu);
     }
 
-    private void InitMainBar(){
-        InitFileMenu();
-        InitViewMenu();
-        InitExpandMenu();
-        InitHelpMenu();
-        InitTaragetMenu();
-        this.getMenus().addAll(fileMenu, viewMenu, expandMenu, helpMenu);
+    private void initMenuBar(){
+        fileMenu = new DDFileMenu(window);
+
+        viewMenu = new DDViewMenu(window);
+
+        targetMenu = new DDTargetMenu(window);
+
+        this.getMenus().addAll(fileMenu, viewMenu, targetMenu);
     }
 
-    private void InitTaragetMenu() {
+    /*private void InitTargetMenu() {
         targetMenu = new Menu("Target");
 
         MenuItem addCurveMenuItem = new MenuItem("Add a Turn");
@@ -250,11 +267,5 @@ public class DDMenuPane extends MenuBar implements EventHandler<ActionEvent>{
         });
 
         fileMenu.getItems().addAll(addCurveMenuItem);
-    }
-
-
-    @Override
-    public void handle(ActionEvent e){
-
-    }
+    }*/
 }

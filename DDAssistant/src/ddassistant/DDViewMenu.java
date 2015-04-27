@@ -23,7 +23,7 @@ public class DDViewMenu extends Menu {
         sideViewMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                window.setGraphSideView();
+
             }
         });
 

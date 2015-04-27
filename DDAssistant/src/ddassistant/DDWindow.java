@@ -64,9 +64,9 @@ public class DDWindow extends Application {
         borderPane.setCenter(ddMainPane);
 
         scene = new Scene(borderPane, WIDTH, HEIGHT);
-
         primaryStage.setTitle("DDAssistant");
         primaryStage.setScene(scene);
+        primaryStage.setMaximized(true);
         primaryStage.show();
     }
 
@@ -87,7 +87,6 @@ public class DDWindow extends Application {
         this.well = well;
         ddMainPane.setWell(well);
     }
-
     /*
     *   removeWell()
     *
@@ -105,6 +104,11 @@ public class DDWindow extends Application {
     * */
     public void redrawGraph() {
         ddMainPane.redrawGraph();
+    }
+
+    public void setGraphSideView(){
+        ddMainPane.setGraphAzimuth(90);
+        ddMainPane.setGraphInclination(0);
     }
 
     /*

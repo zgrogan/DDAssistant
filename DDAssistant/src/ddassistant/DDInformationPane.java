@@ -75,11 +75,7 @@ public class DDInformationPane extends Region {
     private DDWell well;
 
     private void initInformationPane(){
-        //
-        infoToolBar = new ToolBar();
-        infoToolBar.setOrientation(Orientation.VERTICAL);
-        Button add = new Button("+");
-        infoToolBar.getItems().add(add);
+
 
         infoTabPane = new TabPane();
         infoTabPane.setMinWidth(window.WIDTH);
@@ -106,7 +102,7 @@ public class DDInformationPane extends Region {
         wellDataTab.setClosable(false);
         infoTabPane.getTabs().add(wellDataTab);
 
-        this.getChildren().addAll(infoToolBar, infoTabPane);
+        this.getChildren().addAll(infoTabPane);
     }
 
     public DDInformationPane(DDWell well, DDWindow window){

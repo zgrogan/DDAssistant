@@ -88,7 +88,6 @@ public class DDGraphControls extends VBox {
 								Number oldValue, Number newValue) {
 				depthTextField.setText("" + (int) getDepthSliderValue());
 				graph.changeDepth(getDepthSliderValue());
-
 			}
 		});
 

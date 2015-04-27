@@ -65,19 +65,14 @@ public class DDTargetMenu extends Menu {
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        if (depthTextField.getText() == null) {
-                            javafx.scene.text.Text textBoxIsNull = new javafx.scene.text.Text();
-                            textBoxIsNull.setText("Depth should be a positive number.");
-                            //mainBox.getChildren().add(textBoxIsNull);
-                            newDialog.close();
-                        }
 
                         if (window.getWell() != null) {
                             // Prompt to save or overwrite changes
                             System.out.println("Well is not empty.");
-                            window.removeWell();
-                            DDWell well = new DDWell();
-                            well.createTargetCurve(Double.valueOf(depthTextField.getText()));
+                            //window.removeWell();
+                            //DDWell well = new DDWell();
+                            well.getTargetCurve().set(new TargetCurve(Double.valueOf(depthTextField.getText())));
+                            //well.createTargetCurve(Double.valueOf(depthTextField.getText()));
                             window.setWell(well);
                         } else if (window.getWell() == null) {
                             DDWell well = new DDWell();
@@ -104,21 +99,24 @@ public class DDTargetMenu extends Menu {
             @Override
             public void handle(ActionEvent event) {
                 Label startDepthLabel = new Label("Start Depth: ");
-                Label endingTVDLabel = new Label("End TVD: ");
+                Label endTVDLabel = new Label("End TVD: ");
                 Label newAzimuthLabel = new Label("New Azimuth: ");
                 Label newInclinationLabel = new Label("New Inclination: ");
 
-                final TextField depthTextField = new TextField();
-                final TextField endTVD = new TextField();
-                final
+                final TextField startDepthTextField = new TextField();
+                final TextField endTVDTextField = new TextField();
+                final TextField newAzimuthTextField = new TextField();
+                final TextField newInclinationTextField = new TextField();
 
                 Button createButton = new Button("Create");
                 Button cancelButton = new Button("Cancel");
 
                 GridPane mainPane = new GridPane();
                 mainPane.setPadding(new Insets(10));
-                mainPane.addRow(0, createButton, cancelButton);
-
+                mainPane.addRow(0, startDepthLabel, startDepthTextField, createButton);
+                mainPane.addRow(1, endTVDLabel, endTVDTextField, cancelButton);
+                mainPane.addRow(2, newAzimuthLabel, newAzimuthTextField);
+                mainPane.addRow(3, newInclinationLabel, newInclinationTextField);
 
 
                 Group newRoot = new Group();
@@ -133,7 +131,14 @@ public class DDTargetMenu extends Menu {
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        //well.addKickOff();
+                        window.getWell().addKickOff(
+                                Double.valueOf(startDepthTextField.getText()),
+                                Double.valueOf(endTVDTextField.getText()),
+                                Double.valueOf(newAzimuthTextField.getText()),
+                                Double.valueOf(newInclinationTextField.getText())
+                        );
+                        window.redrawGraph();
+                        newDialog.close();
                     }
                 });
 
@@ -167,26 +172,11 @@ public class DDTargetMenu extends Menu {
                 Button cancelButton = new Button("Cancel");
 
                 GridPane mainPane = new GridPane();
+                mainPane.setPadding(new Insets(10));
                 mainPane.addRow(0, depthLabel, depthTextField, createButton);
                 mainPane.addRow(1, curveLengthLabel, lengthTextField, cancelButton);
                 mainPane.addRow(2, azimuthLabel, azimuthTextField);
                 mainPane.addRow(3, inclinationLabel, inclinationTextField);
-
-                /*HBox rowOneBox = new HBox(); // Depth properties + Create Button
-                depthLabel.setPadding(new Insets(7, 0, 0, 0));
-                rowOneBox.getChildren().addAll(depthLabel, depthTextField, createButton);
-
-                HBox rowTwoBox = new HBox(); // Curve Length Properties + Cancel Button
-                rowTwoBox.getChildren().addAll(curveLengthLabel, lengthTextField, cancelButton);
-
-                HBox rowThreeBox = new HBox(); // Azimuth Properties
-                rowThreeBox.getChildren().addAll(azimuthLabel, azimuthTextField);
-
-                HBox rowFourBox = new HBox(); // Inclination Properties
-                rowFourBox.getChildren().addAll(inclinationLabel, inclinationTextField);
-
-                VBox mainBox = new VBox();
-                mainBox.getChildren().addAll(rowOneBox, rowTwoBox, rowThreeBox, rowFourBox);*/
 
                 Group newRoot = new Group();
                 newRoot.getChildren().add(mainPane);
@@ -194,7 +184,7 @@ public class DDTargetMenu extends Menu {
 
                 final Stage newDialog = new Stage();
                 newDialog.setScene(newScene);
-                newDialog.setTitle("New");
+                newDialog.setTitle("Add Turn");
                 newDialog.show();
 
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
@@ -226,6 +216,7 @@ public class DDTargetMenu extends Menu {
     }
     public DDTargetMenu(DDWindow window){
         this.window = window;
+        this.well = window.getWell();
         initTargetMenu();
     }
 }
