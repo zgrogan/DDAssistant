@@ -110,9 +110,9 @@ public class DDGraph extends StackPane {
 			double az = curve.getAzimuthAt(depth);
 			double inc = curve.getInclinationAt(depth);
 			depth += height / 2;
-			newBox.setTranslateX(midpoint.getX());
+			newBox.setTranslateX(midpoint.getX() + hi - low);
 			newBox.setTranslateY(midpoint.getY());
-			newBox.setTranslateZ(midpoint.getZ());
+			newBox.setTranslateZ(midpoint.getZ() + left - right);
 			rx.setAngle(inc);
 			ry.setAngle(90 - az);
 			newBox.getTransforms().addAll(ry, rx);

@@ -29,6 +29,7 @@ public class CurveTest {
 
 		// add another turn & check directions are correct
 		tc.addTurn(7000, 200, 130, 90);
+		System.out.println(tc);
 		double az6k = tc.getAzimuthAt(6000);
 		double in6k = tc.getInclinationAt(6000);
 		az8k = tc.getAzimuthAt(8000);

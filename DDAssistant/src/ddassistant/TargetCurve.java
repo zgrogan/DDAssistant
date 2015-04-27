@@ -3,6 +3,7 @@ package ddassistant;
 import java.text.DecimalFormat;
 import java.util.LinkedList;
 
+import com.sun.javafx.geom.Point2D;
 import javafx.geometry.Point3D;
 
 // represents a directional driller's target curve.  maintains a target depth
@@ -103,8 +104,6 @@ public class TargetCurve extends DDCurveData {
 		Point3D actualPoint = actualCurve.getPointAt(depth);
 		Point3D upVector = getUpVector(actualCurve, depth);
 		Point3D leftVector = getLeftVector(actualCurve, depth);
-		System.out.println("up: " + upVector);
-		System.out.println("left: " + leftVector);
 		double actualAzimuth = actualCurve.getAzimuthAt(depth);
 		double actualInclinaton = actualCurve.getInclinationAt(depth);
 		// find closest point on target curve to actualPoint
@@ -116,6 +115,8 @@ public class TargetCurve extends DDCurveData {
 			count++;
 			targetPoint = this.getPointAt(depth);
 			distance = actualPoint.distance(targetPoint);
+			if (distance < 0.25)
+				distanceChange = 0;
 			depth += distanceChange;
 			if (distance - targetPoint.distance(actualPoint) >= 0)
 				distanceChange /= -2;
@@ -123,14 +124,22 @@ public class TargetCurve extends DDCurveData {
 
 
 		// calculate hi/low left/right based on given points and angles
-		Point3D differenceVector = targetPoint.subtract(actualPoint);
-		double hi = distance * Math.cos(differenceVector.angle(upVector));
-		double left = distance * Math.cos(differenceVector.angle(leftVector));
+		Point3D difference = actualPoint.subtract(targetPoint);
+		double hi = -difference.getY();
+		double left = Math.sqrt(Math.pow(
+				Math.sin(actualAzimuth * Math.PI / 180)
+				* Point2D.distance((float)actualPoint.getX(), (float)actualPoint.getY(),
+				(float)targetPoint.getX(), (float)targetPoint.getY()),2)
+
+				+ Math.pow(Math.cos(actualAzimuth * Math.PI / 180)
+				* Point2D.distance((float)actualPoint.getZ(), (float)actualPoint.getZ(),
+				(float)targetPoint.getZ(), (float)targetPoint.getZ()),2));
 
 		DecimalFormat df = new DecimalFormat();
 		df.setMaximumFractionDigits(2);
-		String hllr = df.format(Math.abs(hi)) + ((hi < 0) ? " Lo" : " Hi / ");
-		hllr += df.format(Math.abs(left)) + ((left < 0) ? " Right" : " Left");
+		String hllr = df.format(Math.abs(hi)) + ((hi < 0) ? " Lo / " : " Hi / ");
+
+		hllr += df.format(Math.abs(left)) + ((left < 0) ? "Right" : "Left");
 
 		return hllr;
 	}
