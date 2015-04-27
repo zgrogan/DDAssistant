@@ -15,6 +15,10 @@ public class TargetCurve extends DDCurveData {
 	private double targetDepth = 0;
 	private double landingDepth = 0;
 
+	public void set(TargetCurve newCurve) {
+		this.points = newCurve.getPoints();
+	}
+
 	public TargetCurve() {
 		super();
 		this.getPoints().add(ZERO);
