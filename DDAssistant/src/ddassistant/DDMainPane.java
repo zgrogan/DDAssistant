@@ -48,6 +48,14 @@ public class DDMainPane extends StackPane {
         ddInfoPane.setWell(well);
     }
 
+    public void setGraphAzimuth(double azimuth){
+        ddGraphPane.setAzimuth(azimuth);
+    }
+
+    public void setGraphInclination(double inclination){
+        ddGraphPane.setInclination(inclination);
+    }
+
     public void removeWell(){
         this.well = null;
     }

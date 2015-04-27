@@ -2,7 +2,10 @@ package ddassistant;
 
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.event.Event;
+import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.SplitPane;
@@ -14,6 +17,7 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
+import javafx.stage.Stage;
 
 /**
  * Created by Colee on 4/14/2015.
@@ -73,7 +77,7 @@ public class DDGraphControls extends VBox {
 		this.graph = graph;
 		createGraphControls();
 		createListeners();
-		SplitPane.setResizableWithParent(this, Boolean.TRUE);
+		//SplitPane.setResizableWithParent(this, Boolean.TRUE);
 	}
 
 	private void createListeners() {
@@ -81,39 +85,48 @@ public class DDGraphControls extends VBox {
 		depthSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable,
-					Number oldValue, Number newValue) {
-				depthTextField.setText("" + (int)getDepthSliderValue());
+								Number oldValue, Number newValue) {
+				depthTextField.setText("" + (int) getDepthSliderValue());
 				graph.changeDepth(getDepthSliderValue());
+
 			}
 		});
 
-		zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
+		/*zoomSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable,
 								Number oldValue, Number newValue) {
 				ZOOM_SLIDER_LABEL.setText("Zoom: " + (getZoomSliderValue() - ZOOM_SLIDER_MAX));
 				graph.changeZoom(getZoomSliderValue());
 			}
-		});
+		});*/
 
-		azimuthSlider.valueProperty().addListener(new ChangeListener<Number>() {
+		/*azimuthSlider.valueProperty().addListener(new ChangeListener<Number>() {
 			@Override
 			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
-				AZIMUTH_SLIDER_LABEL.setText("Rotate: " + getAzimuthSliderValue());
-				graph.changeAzimuth(getAzimuthSliderValue());
+				try {
+					AZIMUTH_SLIDER_LABEL.setText("Rotate: " + getAzimuthSliderValue());
+					graph.changeAzimuth(getAzimuthSliderValue());
+				}catch(){
+
+				}
 			}
-		});
+		});*/
 		
-		inclinationSlider.valueProperty().addListener(
+		/*inclinationSlider.valueProperty().addListener(
 				new ChangeListener<Number>() {
 					@Override
 					public void changed(
 							ObservableValue<? extends Number> observable,
 							Number oldValue, Number newValue) {
-						INCLINATION_SLIDER_LABEL.setText("Up/Down: " + inclinationSlider.getValue());
-						graph.changeInclination(inclinationSlider.getValue());
+						try {
+							INCLINATION_SLIDER_LABEL.setText("Up/Down: " + inclinationSlider.getValue());
+							graph.changeInclination(inclinationSlider.getValue());
+						}catch(){
+
+						}
 					}
-				});
+				});*/
 
 		// Text Field Listeners
 		depthTextField.textProperty().addListener(new ChangeListener<String>() {
@@ -127,6 +140,7 @@ public class DDGraphControls extends VBox {
 				} else {
 					depthTextField.setText(oldValue);
 				}
+
 			}
 		});
 
@@ -147,22 +161,19 @@ public class DDGraphControls extends VBox {
 			}
 		});
 
-		inclinationSlider.valueProperty().addListener(
-				new ChangeListener<Number>() {
-					@Override
-					public void changed(
-							ObservableValue<? extends Number> observable,
-							Number oldValue, Number newValue) {
-						INCLINATION_SLIDER_LABEL.setText("Up/Down: " + inclinationSlider.getValue());
-						graph.changeInclination(inclinationSlider.getValue());
-					}
-				});
-
+		inclinationSlider.valueProperty().addListener(new ChangeListener<Number>() {
+			@Override
+			public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
+				INCLINATION_SLIDER_LABEL.setText("Up/Down: " + inclinationSlider.getValue());
+				graph.changeInclination(inclinationSlider.getValue());
+			}
+		});
 	}
 	
 	private void createGraphControls() {
 		hbox = new VBox();
 		vbox = new VBox();
+
 		// Depth Slider
 		depthSlider = new Slider(DEPTH_SLIDER_MIN, depthSliderMax,
 				DEPTH_SLIDER_DEFAULT);
@@ -219,11 +230,11 @@ public class DDGraphControls extends VBox {
 		this.azimuthSlider.setValue(value);
 	}
 
-	public double getLongitudeSliderValue() {
+	public double getInclinationSliderValue() {
 		return inclinationSlider.getValue();
 	}
 
-	public void setLongitudeSliderValue(double value) {
+	public void setInclinationSliderValue(double value) {
 		this.inclinationSlider.setValue(value);
 	}
 
@@ -236,10 +247,10 @@ public class DDGraphControls extends VBox {
 	}
 
 	public void redraw() {
-		graph.changeAzimuth(azimuthSlider.getValue());
-		graph.changeDepth(depthSlider.getValue());
-		graph.changeZoom(ZOOM_SLIDER_MAX - zoomSlider.getValue());
-		graph.changeInclination(inclinationSlider.getValue());
-		graph.build();
+			graph.changeAzimuth(azimuthSlider.getValue());
+			graph.changeDepth(depthSlider.getValue());
+			graph.changeZoom(ZOOM_SLIDER_MAX - zoomSlider.getValue());
+			graph.changeInclination(inclinationSlider.getValue());
+			graph.build();
 	}
 }
