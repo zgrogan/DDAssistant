@@ -4,13 +4,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Point3D;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;
 
 @SuppressWarnings("restriction")
-public class DDWell {
+public class DDWell implements Serializable {
 	// well identifying informaton
 	private HashMap<String, String> wellInfo;
 
