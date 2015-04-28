@@ -23,7 +23,6 @@ public class DDTargetMenu extends Menu {
 
 
     private DDWindow window;
-    private DDWell well;
 
     private MenuItem targetCurveMenuItem;
     private MenuItem kickOffMenuItem;
@@ -68,15 +67,10 @@ public class DDTargetMenu extends Menu {
                         if (window.getWell() != null) {
                             // Prompt to save or overwrite changes
                             System.out.println("Well is not empty.");
-                            //window.removeWell();
-                            //DDWell well = new DDWell();
-                            well.getTargetCurve().set(new TargetCurve(Double.valueOf(depthTextField.getText())));
-                            //well.createTargetCurve(Double.valueOf(depthTextField.getText()));
-                            window.setWell(well);
+                            window.getWell().getTargetCurve().set(new TargetCurve(Double.valueOf(depthTextField.getText())));
+
                         } else if (window.getWell() == null) {
-                            //DDWell well = new DDWell();
-                            well.createTargetCurve(Double.valueOf(depthTextField.getText()));
-                            window.setWell(well);
+                            window.getWell().createTargetCurve(Double.valueOf(depthTextField.getText()));
                         }
                         window.redrawGraph();
                         newDialog.close();
@@ -253,10 +247,10 @@ public class DDTargetMenu extends Menu {
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        well.setTargetWindowHi(Double.valueOf(highTargetTextField.getText()));
-                        well.setTargetWindowLow(Double.valueOf(lowTargetTextField.getText()));
-                        well.setTargetWindowLeft(Double.valueOf(leftTargetTextField.getText()));
-                        well.setTargetWindowRight(Double.valueOf(rightTargetTextField.getText()));
+                        window.getWell().setTargetWindowHi(Double.valueOf(highTargetTextField.getText()));
+                        window.getWell().setTargetWindowLow(Double.valueOf(lowTargetTextField.getText()));
+                        window.getWell().setTargetWindowLeft(Double.valueOf(leftTargetTextField.getText()));
+                        window.getWell().setTargetWindowRight(Double.valueOf(rightTargetTextField.getText()));
                         window.redrawGraph();
 
                         stage.close();
@@ -282,7 +276,6 @@ public class DDTargetMenu extends Menu {
     * */
     public DDTargetMenu(DDWindow window){
         this.window = window;
-        this.well = window.getWell();
         initTargetMenu();
     }
 }
