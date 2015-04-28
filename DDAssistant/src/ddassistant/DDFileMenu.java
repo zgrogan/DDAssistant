@@ -6,8 +6,10 @@ import javafx.geometry.Insets;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.stage.Stage;
+import sun.plugin.javascript.navig.Anchor;
 
 import javax.print.DocFlavor;
 
@@ -67,7 +69,6 @@ public class DDFileMenu extends Menu{
                         stage.close();
                     }
                 });
-
             }
         });
 
@@ -76,7 +77,30 @@ public class DDFileMenu extends Menu{
         loadMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
+                Label loadMenuLabel = new Label("Select a well from the list: ");
+                ListView<String> listView = new ListView<String>();
+                Button selectButton = new Button("Select");
+                Button cancelButton = new Button("Cancel");
 
+                GridPane mainPane = new GridPane();
+                mainPane.setHgap(5);
+                mainPane.setVgap(5);
+                mainPane.setPadding(new Insets(10));
+                mainPane.addRow(0, loadMenuLabel);
+                mainPane.addRow(1, listView);
+                AnchorPane anchorPane = new AnchorPane();
+                anchorPane.getChildren().addAll(selectButton, cancelButton);
+                AnchorPane.setRightAnchor(cancelButton, 0d);
+                AnchorPane.setLeftAnchor(selectButton, -mainPane.getMinWidth());
+                mainPane.addRow(2, anchorPane);
+
+                Group root = new Group();
+                root.getChildren().add(mainPane);
+
+                Scene scene = new Scene(root, mainPane.getMinWidth(), mainPane.getMinHeight());
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.show();
             }
         });
 
