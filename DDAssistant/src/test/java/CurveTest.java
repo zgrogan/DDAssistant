@@ -29,7 +29,6 @@ public class CurveTest {
 
 		// add another turn & check directions are correct
 		tc.addTurn(7000, 200, 130, 90);
-		System.out.println(tc);
 		double az6k = tc.getAzimuthAt(6000);
 		double in6k = tc.getInclinationAt(6000);
 		az8k = tc.getAzimuthAt(8000);
@@ -96,7 +95,6 @@ public class CurveTest {
 		ac.addSurvey(1000, 150, 5);
 		double az = ac.getAzimuthAt(750);
 		double inc = ac.getInclinationAt(750);
-		System.out.println(az);
 		assertTrue(az > 149.999 && az < 150.001);
 		assertTrue(inc > 4.999 && inc < 5.001);
 

@@ -1,7 +1,12 @@
 package ddassistant;
 
+import com.thoughtworks.xstream.XStream;
+import com.thoughtworks.xstream.io.xml.DomDriver;
+
+import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
 import java.sql.Blob;
+import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -55,12 +60,19 @@ public class NewFile extends Connection {
     public void testConnection() throws SQLException, IOException, ClassNotFoundException {
         mysql();
         DDWell well = new DDWell();
-        System.out.println("1");
+        XStream stream = new XStream(new DomDriver());
+        Clob wellClob = connection.createClob();
+        Writer clobWriter = wellClob.setCharacterStream(1);
+        clobWriter.write(stream.toXML(well));
+        DDWell well2 = (DDWell)stream.fromXML(wellClob.getCharacterStream());
+        System.out.println(well2);
+        //String wellBlobString = wellBlob.getBytes(1, (int) wellBlob.length());
+        //Blob wellBlob2 = new SerialBlob((SerialBlob)stream.fromXML(wellBlobString));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         System.out.println("1.1");
         ObjectOutputStream oos = new ObjectOutputStream(baos);
         System.out.println("1.2");
-        oos.writeObject(well);
+        oos.writeObject(wellBlob);
         System.out.println("2");
         byte[] employeeAsBytes = baos.toByteArray();
         ByteArrayInputStream bais = new ByteArrayInputStream(employeeAsBytes);
