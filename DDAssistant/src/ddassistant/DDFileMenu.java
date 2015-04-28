@@ -22,7 +22,6 @@ public class DDFileMenu extends Menu{
     private final String STRING_LOAD = "Load";
     private final String STRING_SAVE = "Save";
 
-    private DDWell well;
     private DDWindow window;
 
     private MenuItem createMenuItem;
@@ -49,7 +48,7 @@ public class DDFileMenu extends Menu{
                 root.getChildren().add(mainPane);
                 Scene scene = new Scene(root, mainPane.getMinWidth(), mainPane.getMinHeight());
 
-                Stage stage = new Stage();
+                final Stage stage = new Stage();
                 stage.setScene(scene);
                 stage.show();
 
