@@ -56,7 +56,7 @@ public final class PostgresConn {
         getConnection().createStatement().execute(query);
     }
 
-    public static DDWell loadWell(String wellName) throws SQLException {
+    public static DDWell load(String wellName) throws SQLException {
         DDWell well = new DDWell();
         XStream xstream = new XStream(new DomDriver());
         String query = "SELECT * FROM wells WHERE well_name='" + wellName + "';";

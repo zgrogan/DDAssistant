@@ -51,14 +51,14 @@ public class PostgresConnTest {
         Connection conn = PostgresConn.getConnection();
         DDWell well = new DDWell("Another Well to Test");
         PostgresConn.save(well);
-        DDWell well2 = PostgresConn.loadWell(well.getWellName());
+        DDWell well2 = PostgresConn.load(well.getWellName());
         assertTrue(well.toString().equals(well2.toString()));
 
         well.getTargetCurve().setTargetDepth(1000);
         well.addKickOff(250,500,0,90);
         well.addSurvey(250,0,0);
         PostgresConn.update(well);
-        well2 = PostgresConn.loadWell(well2.getWellName());
+        well2 = PostgresConn.load(well2.getWellName());
         assertTrue(well.toString().equals(well2.toString()));
 
         PostgresConn.delete(well);
