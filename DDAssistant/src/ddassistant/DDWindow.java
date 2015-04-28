@@ -85,7 +85,6 @@ public class DDWindow extends Application {
     * */
     public void setWell(DDWell well){
         this.well = well;
-        ddMainPane.setWell(well);
     }
     /*
     *   removeWell()

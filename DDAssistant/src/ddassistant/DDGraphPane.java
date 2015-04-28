@@ -19,7 +19,7 @@ public class DDGraphPane extends StackPane {
     private static double WIDTH;
 
     // Private Fields
-    private DDWell well;
+    private DDWindow window;
     private DDGraphControls ddGraphControls;
     private DDGraph ddGraph;
     private SplitPane splitPane;
@@ -28,14 +28,15 @@ public class DDGraphPane extends StackPane {
     private double height;
 
 
-    public DDGraphPane(){
+    public DDGraphPane(DDWindow window){
+        this.window = window;
         ScrollPane scrollPane = new ScrollPane();
         ScrollPane scrollGraph = new ScrollPane();
         splitPane = new SplitPane();
 
-        ddGraph = new DDGraph(500, 500);
+        ddGraph = new DDGraph(500, 500, window);
 
-        ddGraphControls = new DDGraphControls(ddGraph, well);
+        ddGraphControls = new DDGraphControls(ddGraph, window);
 
         splitPane.setOrientation(Orientation.HORIZONTAL);
         splitPane.setDividerPosition(0,0.20);
@@ -67,12 +68,6 @@ public class DDGraphPane extends StackPane {
 
     public void setInclination(double inclination){
         ddGraphControls.setInclinationSliderValue(inclination);
-    }
-
-    public void setWell(DDWell well){
-        this.well = well;
-        ddGraph.setWell(well);
-        ddGraphControls.setWell(well);
     }
 
     public void redrawGraph() {

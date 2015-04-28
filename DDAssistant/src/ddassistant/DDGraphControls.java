@@ -65,15 +65,15 @@ public class DDGraphControls extends VBox {
 	private Slider inclinationSlider;
 	private TextField inclinationTextField;
 
-	private DDWell well;
+	private DDWindow window;
 	private DDGraph graph;
 
 	private VBox hbox; // HBox used to store all of the Graph Controls
 	private VBox vbox; // VBox used to store
 	
 	//constructors
-	public DDGraphControls(DDGraph graph, DDWell well) {
-		this.well = well;
+	public DDGraphControls(DDGraph graph, DDWindow window) {
+		this.window = window;
 		this.graph = graph;
 		createGraphControls();
 		createListeners();
@@ -203,11 +203,6 @@ public class DDGraphControls extends VBox {
 		this.getChildren().add(vbox);
 	}
 
-
-	public void setWell(DDWell well){
-		this.well = well;
-	}
-
 	public void removeGraph() {
 		vbox.getChildren().removeAll(graph);
 		graph = null;
@@ -250,6 +245,8 @@ public class DDGraphControls extends VBox {
 			graph.changeDepth(depthSlider.getValue());
 			graph.changeZoom(ZOOM_SLIDER_MAX - zoomSlider.getValue());
 			graph.changeInclination(inclinationSlider.getValue());
+			depthSliderMax = window.getWell().getTargetCurve().getTargetDepth();
+			depthSlider.setMax(depthSliderMax);
 			graph.build();
 	}
 }

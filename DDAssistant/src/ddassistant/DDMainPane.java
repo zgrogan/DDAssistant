@@ -26,7 +26,7 @@ public class DDMainPane extends StackPane {
         this.window = window;
         this.well = well;
         splitPane = new SplitPane();
-        ddGraphPane = new DDGraphPane();
+        ddGraphPane = new DDGraphPane(window);
         ddInfoPane = new DDInformationPane(well, window);
 
         splitPane.setOrientation(Orientation.VERTICAL);
@@ -40,12 +40,6 @@ public class DDMainPane extends StackPane {
             }
         });
         this.getChildren().addAll(splitPane);
-    }
-
-    public void setWell(DDWell well){
-        this.well = well;
-        ddGraphPane.setWell(well);
-        ddInfoPane.setWell(well);
     }
 
     public void setGraphAzimuth(double azimuth){

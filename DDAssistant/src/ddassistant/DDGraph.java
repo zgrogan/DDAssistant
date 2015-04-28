@@ -26,7 +26,7 @@ public class DDGraph extends StackPane {
 	private PerspectiveCamera camera;
 	private Group root;
 	private SplitPane parent;
-	private DDWell well;
+	private DDWindow window;
 	private double holeRadius = 0.75;
 
 	private double depthProperty;
@@ -47,15 +47,11 @@ public class DDGraph extends StackPane {
 
 	private double width, height;
 
-	public DDGraph(double width, double height) {
+	public DDGraph(double width, double height, DDWindow window) {
+		this.window = window;
 		this.width = width;
 		this.height = height;
 		createContent();
-	}
-
-	public void setWell(DDWell well){
-		this.well = well;
-		build();
 	}
 
 	public void updateSize(double width, double height){
@@ -88,6 +84,7 @@ public class DDGraph extends StackPane {
 	}
 
 	private void drawWindow(TargetCurve curve, PhongMaterial material) {
+		DDWell well = window.getWell();
 		LinkedList<Point3D> points = well.getTargetPoints();
 		LinkedList<Point3D> curvePoints = curve.getPoints();
 		LinkedList<Box> curveBoxes = new LinkedList<Box>();
@@ -126,7 +123,6 @@ public class DDGraph extends StackPane {
 	}
 
 	private void drawCurve(DDCurveData curve, PhongMaterial material) {
-		LinkedList<Point3D> points = well.getTargetPoints();
 		LinkedList<Point3D> curvePoints = curve.getPoints();
 		LinkedList<Cylinder> curveCylinders = new LinkedList<Cylinder>();
 		double depth = 0;
@@ -177,13 +173,13 @@ public class DDGraph extends StackPane {
 
 		// draw specified objects
 		if(drawTargetWIndow)
-		  drawWindow(well.getTargetCurve(), greenMaterial);
+		  drawWindow(window.getWell().getTargetCurve(), greenMaterial);
 		if(drawTargetCurve)
-		  drawCurve(well.getTargetCurve(), greenMaterial);
+		  drawCurve(window.getWell().getTargetCurve(), greenMaterial);
 		if(drawActualCurve)
-		  drawCurve(well.getActualCurve(), redMaterial);
+		  drawCurve(window.getWell().getActualCurve(), redMaterial);
 		if(drawProjectedCurve)
-			drawCurve(well.getProjectedCurve(), grayMaterial);
+			drawCurve(window.getWell().getProjectedCurve(), grayMaterial);
 //		if (!projectedCurve.getPoints().isEmpty());
 //		    drawCurve(projectedCurve, grayMaterial);
 
@@ -213,7 +209,7 @@ public class DDGraph extends StackPane {
 	public void resetCameraPosition() {
 		Point3D translateVector = DDCurveData.sphereToCart(zoomProperty,
 				azimuthProperty - 270, 180 - inclinationProperty);
-		Point3D depthAdjustedTranslateVector = well.getTargetCurve().getPointAt(
+		Point3D depthAdjustedTranslateVector = window.getWell().getTargetCurve().getPointAt(
 				this.depthProperty).add(translateVector);
 		camera.getTransforms().remove(0, 3);
 		camera.getTransforms().addAll(
