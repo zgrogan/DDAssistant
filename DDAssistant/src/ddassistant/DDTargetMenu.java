@@ -258,6 +258,8 @@ public class DDTargetMenu extends Menu {
                         well.setTargetWindowLeft(Double.valueOf(leftTargetTextField.getText()));
                         well.setTargetWindowRight(Double.valueOf(rightTargetTextField.getText()));
                         window.redrawGraph();
+
+                        stage.close();
                     }
                 });
 
@@ -273,6 +275,11 @@ public class DDTargetMenu extends Menu {
         this.setText(STRING_TARGET);
         this.getItems().addAll(targetCurveMenuItem, kickOffMenuItem, addTurnMenuItem, targetWindowMenuItem);
     }
+
+    /*
+    *
+    *
+    * */
     public DDTargetMenu(DDWindow window){
         this.window = window;
         this.well = window.getWell();

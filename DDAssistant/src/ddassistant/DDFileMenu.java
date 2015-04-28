@@ -2,8 +2,12 @@ package ddassistant;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuItem;
+import javafx.geometry.Insets;
+import javafx.scene.Group;
+import javafx.scene.Scene;
+import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
+import javafx.stage.Stage;
 
 import javax.print.DocFlavor;
 
@@ -29,8 +33,41 @@ public class DDFileMenu extends Menu{
         createMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-                DDWell well = new DDWell();
-                window.setWell(well);
+                Label wellNameLabel = new Label("Well Name: ");
+                final TextField wellNameTextField = new TextField();
+                Button createButton = new Button("Create");
+                Button cancelButton = new Button("Cancel");
+
+                GridPane mainPane = new GridPane();
+                mainPane.setHgap(5);
+                mainPane.setPadding(new Insets(10));
+                mainPane.addRow(0, wellNameLabel, wellNameTextField, createButton, cancelButton);
+
+                Group root = new Group();
+                root.getChildren().add(mainPane);
+                Scene scene = new Scene(root, mainPane.getMinWidth(), mainPane.getMinHeight());
+
+                Stage stage = new Stage();
+                stage.setScene(scene);
+                stage.show();
+
+                createButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        DDWell well = new DDWell();
+                        well.setWellName(wellNameTextField.getText());
+                        window.setWell(well);
+                        stage.close();
+                    }
+                });
+
+                cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        stage.close();
+                    }
+                });
+
             }
         });
 
@@ -48,7 +85,11 @@ public class DDFileMenu extends Menu{
         saveMenuItem.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent event) {
-
+                try {
+                    PostgresConn.save(window.getWell());
+                } catch (Exception e) {
+                    System.out.println(e.getCause());
+                }
             }
         });
 
