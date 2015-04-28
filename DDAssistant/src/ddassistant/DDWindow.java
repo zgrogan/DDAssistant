@@ -118,4 +118,8 @@ public class DDWindow extends Application {
     public DDWell getWell(){
         return well;
     }
+
+    public static double getHEIGHT() {
+        return HEIGHT;
+    }
 }

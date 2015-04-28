@@ -50,6 +50,8 @@ public class PostgresConnTest {
     public void testWellSaveLoadUpdateDelete() throws SQLException, InterruptedException {
         Connection conn = PostgresConn.getConnection();
         DDWell well = new DDWell("Another Well to Test");
+        well.getTargetCurve().setTargetDepth(5000);
+        well.addKickOff(1000, 2000, 0, 90);
         PostgresConn.save(well);
         DDWell well2 = PostgresConn.load(well.getWellName());
         assertTrue(well.toString().equals(well2.toString()));
@@ -61,6 +63,9 @@ public class PostgresConnTest {
         well2 = PostgresConn.load(well2.getWellName());
         assertTrue(well.toString().equals(well2.toString()));
 
+        DDWell well3 = new DDWell("Another Well to Test");
+
+        assertFalse(well3.toString().equals(well2.toString()));
         PostgresConn.delete(well);
     }
 }

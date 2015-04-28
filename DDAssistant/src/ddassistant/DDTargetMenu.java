@@ -74,7 +74,7 @@ public class DDTargetMenu extends Menu {
                             //well.createTargetCurve(Double.valueOf(depthTextField.getText()));
                             window.setWell(well);
                         } else if (window.getWell() == null) {
-                            DDWell well = new DDWell();
+                            //DDWell well = new DDWell();
                             well.createTargetCurve(Double.valueOf(depthTextField.getText()));
                             window.setWell(well);
                         }

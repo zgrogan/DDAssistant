@@ -26,7 +26,7 @@ public class DDInformationPane extends Region {
 
 
     private TabPane infoTabPane;
-    private ToolBar infoToolBar;
+    private double height;
 
     private TableView<String> surveyTable;
     /*
@@ -114,5 +114,10 @@ public class DDInformationPane extends Region {
     public void setWell(DDWell well) {
         this.well = well;
         surveyTab.setWell(well);
+    }
+
+    public void updateSize(double height){
+        this.height = height;
+        surveyTab.updateSize(height);
     }
 }

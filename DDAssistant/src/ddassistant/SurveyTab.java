@@ -100,4 +100,6 @@ public class SurveyTab extends Tab {
         this.setContent(surveyVBox);
     }
 
+    public void updateSize(double height) {
+    }
 }

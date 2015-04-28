@@ -14,6 +14,7 @@ import javafx.stage.Stage;
 import sun.plugin.javascript.navig.Anchor;
 
 import javax.print.DocFlavor;
+import java.sql.SQLException;
 import java.util.Observable;
 
 /**
@@ -58,9 +59,9 @@ public class DDFileMenu extends Menu{
                 createButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
-                        DDWell well = new DDWell();
-                        well.setWellName(wellNameTextField.getText());
+                        DDWell well = new DDWell(wellNameTextField.getText());
                         window.setWell(well);
+                        window.redrawGraph();
                         stage.close();
                     }
                 });
@@ -74,6 +75,7 @@ public class DDFileMenu extends Menu{
             }
         });
 
+        // load
         loadMenuItem = new MenuItem();
         loadMenuItem.setText(STRING_LOAD);
         loadMenuItem.setOnAction(new EventHandler<ActionEvent>() {
@@ -81,13 +83,13 @@ public class DDFileMenu extends Menu{
             public void handle(ActionEvent event) {
                 Label loadMenuLabel = new Label("Select a well from the list: ");
 
-
+                ObservableList<String> data = null;
                 try {
-                    ObservableList<String> data = FXCollections.observableArrayList(PostgresConn.getWellList());
+                    data = FXCollections.observableArrayList(PostgresConn.getWellList());
                 } catch (Exception e) {
 
                 }
-                ListView<String> listView = new ListView<String>();
+                final ListView<String> listView = new ListView<String>(data);
                 listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
 
                 Button selectButton = new Button("Select");
@@ -109,17 +111,23 @@ public class DDFileMenu extends Menu{
                 root.getChildren().add(mainPane);
 
                 Scene scene = new Scene(root, mainPane.getMinWidth(), mainPane.getMinHeight());
-                Stage stage = new Stage();
+                final Stage stage = new Stage();
                 stage.setScene(scene);
                 stage.show();
 
+                // select
                 selectButton.setOnAction(new EventHandler<ActionEvent>() {
                     @Override
                     public void handle(ActionEvent event) {
                         String selectedWell = listView.getSelectionModel().getSelectedItem();
-                        DDWell well = new DDWell();
-                        well.setWellName(selectedWell);
+                        DDWell well = null;
+                        try {
+                            well = PostgresConn.load(selectedWell);
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
                         window.setWell(well);
+                        window.redrawGraph();
                         stage.close();
                     }
                 });
@@ -140,8 +148,14 @@ public class DDFileMenu extends Menu{
             public void handle(ActionEvent event) {
                 try {
                     PostgresConn.save(window.getWell());
+                    System.out.println(window.getWell());
                 } catch (Exception e) {
-                    System.out.println(e.getCause());
+                    try {
+                        PostgresConn.update(window.getWell());
+                        System.out.println(window.getWell());
+                    } catch (Exception e2) {
+                        System.out.println("unable to save");
+                    }
                 }
             }
         });

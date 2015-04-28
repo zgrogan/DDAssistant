@@ -37,6 +37,7 @@ public class DDMainPane extends StackPane {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
                 ddGraphPane.updateSize(Screen.getPrimary().getVisualBounds().getHeight() * newValue.doubleValue());
+                ddInfoPane.updateSize(Screen.getPrimary().getVisualBounds().getHeight() * newValue.doubleValue());
             }
         });
         this.getChildren().addAll(splitPane);
