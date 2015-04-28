@@ -35,7 +35,7 @@ public class PostgresConnTest {
         while(rs.next())
             xml2 = rs.getString(2);
 
-        assertTrue(PostgresConn.getWellList().get(0).equals(well.getWellName()));
+        assertTrue(PostgresConn.getWellList().contains(well.getWellName()));
 
         DDWell well2 = (DDWell)stream.fromXML(xml2);
 

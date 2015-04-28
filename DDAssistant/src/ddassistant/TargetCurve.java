@@ -65,7 +65,9 @@ public class TargetCurve extends DDCurveData {
 		double error = 1;
 		// hack, correct for inconsistencies in landing depth from expected value
 		// inefficient, but effective
-		while(Math.abs(error) > 0.00001) {
+		int count = 0;
+		while(Math.abs(error) > 0.00001 && count < 1000) {
+			count++;
 			error = landingTVD - this.getTVDAt(startDepth + arcLength);
 			arcLength += error/2;
 			addTurn(startDepth, arcLength, newAzimuth, newInclination);

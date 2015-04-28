@@ -114,7 +114,7 @@ public class DDGraph extends StackPane {
 			newBox.setTranslateY(midpoint.getY());
 			newBox.setTranslateZ(midpoint.getZ() + (hi - low)/2);
 			rx.setAngle(inc);
-			ry.setAngle(90 - az);
+			ry.setAngle(az + 90);
 			newBox.getTransforms().addAll(ry, rx);
 			newBox.setMaterial(material);
 
@@ -153,7 +153,7 @@ public class DDGraph extends StackPane {
 			newCylinder.setTranslateY(midpoint.getY());
 			newCylinder.setTranslateZ(midpoint.getZ());
 			rx.setAngle(inc);
-			ry.setAngle(90 - az);
+			ry.setAngle(az + 90);
 			newCylinder.getTransforms().addAll(ry, rx);
 			newCylinder.setMaterial(material);
 
@@ -212,7 +212,7 @@ public class DDGraph extends StackPane {
 
 	public void resetCameraPosition() {
 		Point3D translateVector = DDCurveData.sphereToCart(zoomProperty,
-				270 - azimuthProperty, 180 - inclinationProperty);
+				azimuthProperty - 270, 180 - inclinationProperty);
 		Point3D depthAdjustedTranslateVector = well.getTargetCurve().getPointAt(
 				this.depthProperty).add(translateVector);
 		camera.getTransforms().remove(0, 3);

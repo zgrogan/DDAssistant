@@ -4,7 +4,7 @@ import javafx.geometry.Point3D;
 
 import java.util.LinkedList;
 
-// DDCurveData represents a set of points in 3D space of
+// DDCurveData rget(0)epresents a set of points in 3D space of
 // of a directional well.
 // Known Subclasses: TargetCurve, ActualCurve
 @SuppressWarnings("restriction")
@@ -13,8 +13,8 @@ public class DDCurveData {
 	// unit vectors for cardinal directions
 	public static final Point3D NORTH = new Point3D(1,0,0);
 	public static final Point3D SOUTH = new Point3D(-1,0,0);
-	public static final Point3D EAST = new Point3D(0,0,1);
-	public static final Point3D WEST = new Point3D(0,0,-1);
+	public static final Point3D EAST = new Point3D(0,0,-1);
+	public static final Point3D WEST = new Point3D(0,0,1);
 	public static final Point3D DOWN = new Point3D(0,1,0);
 	public static final Point3D UP = new Point3D(0,-1,0);
 	public static final Point3D ZERO = new Point3D(0,0,0);
@@ -104,7 +104,7 @@ public class DDCurveData {
 		x = (Math.abs(x) > 0.000001) ? x : 0;
 		y = (Math.abs(y) > 0.000001) ? y : 0;
 		z = (Math.abs(z) > 0.000001) ? z : 0;
-		return new Point3D(x,y,z);
+		return new Point3D(x,y,-z);
 	}
 	
 	// get a directional unit vector from given azimuth and inclination
@@ -138,7 +138,7 @@ public class DDCurveData {
 		double dz = diff.getZ();
 		if (dx == 0 && dz == 0)
 			return 0;
-		azimuth = ((dz < 0) ? -1 : 1) * Math.acos(dx / Math.sqrt(dx * dx + dz * dz));
+		azimuth = ((dz < 0) ? 1 : -1) * Math.acos(dx / Math.sqrt(dx * dx + dz * dz));
 		return azimuth * 180 / Math.PI;
 	}
 

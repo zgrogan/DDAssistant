@@ -11,6 +11,21 @@ import static org.junit.Assert.*;
 @SuppressWarnings("restriction")
 public class CurveTest {
 	@Test
+	public void sphereToCartTest() {
+		Point3D northTest = DDCurveData.sphereToCart(1, 0, 90);
+		Point3D eastTest = DDCurveData.sphereToCart(1,90,90);
+		Point3D westTest = DDCurveData.sphereToCart(1,-90,90);
+		Point3D southTest = DDCurveData.sphereToCart(1,180,90);
+		Point3D downTest = DDCurveData.sphereToCart(1,0,0);
+		Point3D upTest = DDCurveData.sphereToCart(1,0,180);
+		assertTrue(northTest.equals(DDCurveData.NORTH));
+		assertTrue(eastTest.equals(DDCurveData.EAST));
+		assertTrue(southTest.equals(DDCurveData.SOUTH));
+		assertTrue(westTest.equals(DDCurveData.WEST));
+		assertTrue(upTest.equals(DDCurveData.UP));
+		assertTrue(downTest.equals(DDCurveData.DOWN));
+	}
+	@Test
 	public void testTargetCurve() {
 		// check TargetCurve creation and straight down points.
 		TargetCurve tc = new TargetCurve(10000f);
