@@ -40,6 +40,11 @@ public class DDWell implements Serializable {
 		wellInfo = new HashMap<String, String>();
 	}
 
+	public DDWell(String s) {
+		this();
+		this.setWellName(s);
+	}
+
 	// public methods
 	public synchronized void addSlide(Slide slide) {
 		slides.add(slide);
