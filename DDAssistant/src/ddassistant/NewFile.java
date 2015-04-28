@@ -6,7 +6,6 @@ import com.thoughtworks.xstream.io.xml.DomDriver;
 import javax.sql.rowset.serial.SerialBlob;
 import java.io.*;
 import java.sql.Blob;
-import java.sql.Clob;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -18,6 +17,9 @@ public class NewFile extends Connection {
     String wellName = null;
     Blob wellBlob;
 
+    public NewFile() {
+
+    }
     public boolean save() throws SQLException {
         boolean success = false;
         int identifier;
@@ -45,48 +47,56 @@ public class NewFile extends Connection {
     }
 
     public void updateWellData(String wellName, Blob wellBlob) throws SQLException {
-        mysql();
+
         statement.execute("UPDATE well SET wellBlob='" + wellBlob + "' WHERE wellName=" + wellName);
         System.out.println("File udpate complete.");
     }
 
     public void insertWellData(String name, Blob wellBlob) throws SQLException {
-        mysql();
+
         statement.execute("INSERT INTO well(wellName,wellBlob) VALUES('" + name + "'," + wellBlob + ")");
         closure();
 
     }
 
-    public void testConnection() throws SQLException, IOException, ClassNotFoundException {
+    public void testConnection() throws SQLException, IOException, ClassNotFoundException
+    {
         mysql();
+
         DDWell well = new DDWell();
         XStream stream = new XStream(new DomDriver());
-        Clob wellClob = connection.createClob();
-        Writer clobWriter = wellClob.setCharacterStream(1);
-        clobWriter.write(stream.toXML(well));
-        DDWell well2 = (DDWell)stream.fromXML(wellClob.getCharacterStream());
-        System.out.println(well2);
-        //String wellBlobString = wellBlob.getBytes(1, (int) wellBlob.length());
-        //Blob wellBlob2 = new SerialBlob((SerialBlob)stream.fromXML(wellBlobString));
+        wellBlob = connection.createBlob();
+        wellBlob.setBytes(0,new byte[well.toString().length()]);
+        wellBlob.setBinaryStream(well.toString().length());
+        //Writer clobWriter = wellClob.setCharacterStream(
+        //Clob wellClob = connection.createClob();1);
+        //clob clobWriter.write(stream.toXML(well));
+        //DDWell well2 = (DDWell)stream.fromXML(clobWriter.setCharacterStream());
+        //System.out.println(well2);
+        String wellBlobString = wellBlob.toString();
+        Blob wellBlob2 = new SerialBlob((SerialBlob)stream.fromXML(wellBlobString));
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        System.out.println("1.1");
+        //System.out.println(baos = wellBlob2);
         ObjectOutputStream oos = new ObjectOutputStream(baos);
-        System.out.println("1.2");
         oos.writeObject(wellBlob);
-        System.out.println("2");
+        statement.execute("INSERT INTO well(wellBlob) VALUES('" + oos + "')");
         byte[] employeeAsBytes = baos.toByteArray();
-        ByteArrayInputStream bais = new ByteArrayInputStream(employeeAsBytes);
-        pstmt.setBinaryStream(1, bais, employeeAsBytes.length);
-        pstmt.executeUpdate();
-        pstmt.close();
-        System.out.println("3");
-        ResultSet resultSet = statement.executeQuery("SELECT emp FROM Employee");
+        //ByteArrayInputStream bais = new ByteArrayInputStream(employeeAsBytes);
+        //pstmt.setBinaryStream(1, bais, employeeAsBytes.length);
+        //pstmt.executeUpdate();
+        //pstmt.close();
+        ResultSet resultSet = statement.executeQuery("SELECT wellBlob FROM well WHERE ID = 6");
+        resultSet.first();
+        System.out.println(resultSet.getBlob(1).toString());
         while (resultSet.next()) {
             byte[] st = (byte[]) resultSet.getObject(1);
             ByteArrayInputStream baip = new ByteArrayInputStream(st);
+            System.out.println("baip " + baip);
             ObjectInputStream ois = new ObjectInputStream(baip);
-            Employee emp = (Employee) ois.readObject();
+            System.out.println("ois " + ois);
+            //well well2 = (DDWell) ois.readObject();
             System.out.println("4");
+            //System.out.println("well " + well.toString() + " well2 " + well2.toString());
         }
     }
 
