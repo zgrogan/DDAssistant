@@ -1,5 +1,7 @@
 package ddassistant;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
@@ -12,6 +14,7 @@ import javafx.stage.Stage;
 import sun.plugin.javascript.navig.Anchor;
 
 import javax.print.DocFlavor;
+import java.util.Observable;
 
 /**
  * Created by Colee on 4/26/2015.
@@ -77,7 +80,16 @@ public class DDFileMenu extends Menu{
             @Override
             public void handle(ActionEvent event) {
                 Label loadMenuLabel = new Label("Select a well from the list: ");
+
+
+                try {
+                    ObservableList<String> data = FXCollections.observableArrayList(PostgresConn.getWellList());
+                } catch (Exception e) {
+
+                }
                 ListView<String> listView = new ListView<String>();
+                listView.getSelectionModel().setSelectionMode(SelectionMode.SINGLE);
+
                 Button selectButton = new Button("Select");
                 Button cancelButton = new Button("Cancel");
 
@@ -100,6 +112,24 @@ public class DDFileMenu extends Menu{
                 Stage stage = new Stage();
                 stage.setScene(scene);
                 stage.show();
+
+                selectButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        String selectedWell = listView.getSelectionModel().getSelectedItem();
+                        DDWell well = new DDWell();
+                        well.setWellName(selectedWell);
+                        window.setWell(well);
+                        stage.close();
+                    }
+                });
+
+                cancelButton.setOnAction(new EventHandler<ActionEvent>() {
+                    @Override
+                    public void handle(ActionEvent event) {
+                        stage.close();
+                    }
+                });
             }
         });
 
