@@ -148,11 +148,9 @@ public class DDFileMenu extends Menu{
             public void handle(ActionEvent event) {
                 try {
                     PostgresConn.save(window.getWell());
-                    System.out.println(window.getWell());
                 } catch (Exception e) {
                     try {
                         PostgresConn.update(window.getWell());
-                        System.out.println(window.getWell());
                     } catch (Exception e2) {
                         System.out.println("unable to save");
                     }
