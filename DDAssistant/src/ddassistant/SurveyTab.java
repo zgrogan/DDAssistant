@@ -17,18 +17,12 @@ import javafx.scene.control.TableColumn.*;
 
 public class SurveyTab extends Tab {
 
-    private DDWell well;
     private DDWindow window;
     private TableView<DDSurvey> tableView;
     private final String TAB_NAME = "Surveys";
 
-    public void setWell(DDWell well) {
-        this.well = well;
-    }
-
-    public SurveyTab(DDWell well, DDWindow window) {
+    public SurveyTab(DDWindow window) {
         this.window = window;
-        this.well = well;
         initSurveyTab();
     }
 
@@ -39,7 +33,7 @@ public class SurveyTab extends Tab {
 
         // build the table
         tableView = new TableView<DDSurvey>();
-        final ObservableList<DDSurvey> surveys = FXCollections.observableList(well.getSurveys());
+        final ObservableList<DDSurvey> surveys = FXCollections.observableList(window.getWell().getSurveys());
         tableView.setItems(surveys);
         TableColumn<DDSurvey,Double> depthCol = new TableColumn<DDSurvey,Double>("Depth");
         TableColumn<DDSurvey,Double> azimuthCol = new TableColumn<DDSurvey,Double>("Azimuth");
@@ -52,7 +46,7 @@ public class SurveyTab extends Tab {
 
             @Override
             public ObservableValue<String> call(CellDataFeatures<DDSurvey, String> param) {
-                return new ReadOnlyStringWrapper(well.getHLLR(param.getValue().getDepth()));
+                return new ReadOnlyStringWrapper(window.getWell().getHLLR(param.getValue().getDepth()));
             }
         });
         tableView.getColumns().setAll(depthCol, azimuthCol, inclinationCol, hllrCol);
@@ -78,7 +72,7 @@ public class SurveyTab extends Tab {
         addButton.setOnAction(new EventHandler<ActionEvent>() {
             @Override
             public void handle(ActionEvent e) {
-                well.addSurvey(new DDSurvey(Double.parseDouble(addDepth.getText()),
+                window.getWell().addSurvey(new DDSurvey(Double.parseDouble(addDepth.getText()),
                         Double.parseDouble(addAzimuth.getText()),
                         Double.parseDouble(addInclination.getText())));
                 window.redrawGraph();
@@ -102,4 +96,5 @@ public class SurveyTab extends Tab {
 
     public void updateSize(double height) {
     }
+
 }

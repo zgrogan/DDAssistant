@@ -72,8 +72,6 @@ public class DDInformationPane extends Region {
     * */
     private DDWindow window;
 
-    private DDWell well;
-
     private void initInformationPane(){
 
 
@@ -81,7 +79,7 @@ public class DDInformationPane extends Region {
         infoTabPane.setMinWidth(window.WIDTH);
 
         // Create Survey Tab
-        surveyTab = new SurveyTab(well, window);
+        surveyTab = new SurveyTab(window);
         infoTabPane.getTabs().add(surveyTab);
 
         // Create Slide/Rotation Tab
@@ -105,19 +103,18 @@ public class DDInformationPane extends Region {
         this.getChildren().addAll(infoTabPane);
     }
 
-    public DDInformationPane(DDWell well, DDWindow window){
+    public DDInformationPane(DDWindow window){
         this.window = window;
-        this.well = well;
         initInformationPane();
-    }
-
-    public void setWell(DDWell well) {
-        this.well = well;
-        surveyTab.setWell(well);
     }
 
     public void updateSize(double height){
         this.height = height;
         surveyTab.updateSize(height);
+    }
+
+    public void refresh() {
+        infoTabPane.getTabs().remove(surveyTab);
+        infoTabPane.getTabs().add(new SurveyTab(window));
     }
 }

@@ -14,7 +14,6 @@ import javafx.stage.Screen;
 public class DDMainPane extends StackPane {
 
     // Private Fields
-    private DDWell well;
     private DDWindow window;
     private DDInformationPane ddInfoPane;
     private DDGraphPane ddGraphPane;
@@ -22,12 +21,11 @@ public class DDMainPane extends StackPane {
 
     private double width, height;
 
-    public DDMainPane(DDWell well, DDWindow window){
+    public DDMainPane(DDWindow window){
         this.window = window;
-        this.well = well;
         splitPane = new SplitPane();
         ddGraphPane = new DDGraphPane(window);
-        ddInfoPane = new DDInformationPane(well, window);
+        ddInfoPane = new DDInformationPane(window);
 
         splitPane.setOrientation(Orientation.VERTICAL);
         splitPane.setDividerPosition(0, 0.70);
@@ -51,11 +49,16 @@ public class DDMainPane extends StackPane {
         ddGraphPane.setInclination(inclination);
     }
 
-    public void removeWell(){
-        this.well = null;
-    }
-
     public void redrawGraph() {
         ddGraphPane.redrawGraph();
+    }
+
+    public void refresh() {
+        redrawGraph();
+        refreshInfoPane();
+    }
+
+    private void refreshInfoPane() {
+        ddInfoPane.refresh();
     }
 }

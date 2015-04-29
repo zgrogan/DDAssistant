@@ -127,7 +127,6 @@ public class DDFileMenu extends Menu{
                             e.printStackTrace();
                         }
                         window.setWell(well);
-                        window.redrawGraph();
                         stage.close();
                     }
                 });

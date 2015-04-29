@@ -60,7 +60,7 @@ public class DDWindow extends Application {
         ddMenuPane = new DDMenuPane(this);
         borderPane.setTop(ddMenuPane);
 
-        ddMainPane = new DDMainPane(well, this);
+        ddMainPane = new DDMainPane(this);
         borderPane.setCenter(ddMainPane);
 
         scene = new Scene(borderPane, WIDTH, HEIGHT);
@@ -85,16 +85,18 @@ public class DDWindow extends Application {
     * */
     public void setWell(DDWell well){
         this.well = well;
+        refresh();
     }
+
+    private void refresh() {
+        ddMainPane.refresh();
+    }
+
     /*
     *   removeWell()
     *
     *
     * */
-    public void removeWell(){
-        this.well = null;
-        ddMainPane.removeWell();
-    }
 
     /*
     *
